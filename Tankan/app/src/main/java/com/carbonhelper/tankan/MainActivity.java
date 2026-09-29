@@ -27,22 +27,14 @@ public class MainActivity extends Activity {
         window.setStatusBarColor(Color.TRANSPARENT);
         window.setNavigationBarColor(Color.TRANSPARENT);
 
-        // 状态栏/导航栏使用浅色内容（页面顶部是深色文字区）
-        if (Build.VERSION.SDK_INT >= 30) {
-            window.setStatusBarContrastEnforced(false);
-            window.setNavigationBarContrastEnforced(false);
-            WindowInsetsController controller = window.getInsetsController();
-            if (controller != null) {
-                controller.setSystemBarsAppearance(
-                        0, WindowInsetsController.APPEARANCE_LIGHT_STATUS_BARS);
-                controller.setSystemBarsAppearance(
-                        0, WindowInsetsController.APPEARANCE_LIGHT_NAVIGATION_BARS);
-            }
-        }
-
         webView = new WebView(this);
         configureWebView();
         setContentView(webView);
+
+        // 状态栏/导航栏图标使用浅色（顶部标题区为蓝色背景白字）。
+        // 必须在 setContentView 之后调用：部分定制 ROM（ColorOS/MTK Android 16）
+        // 在 onCreate 早期获取 InsetsController 会因 DecorView 未就绪而抛 NPE。
+        applySystemBarAppearance(window);
 
         // 将系统安全区（状态栏顶部、手势条底部）尺寸注入到页面 CSS 变量
         webView.setOnApplyWindowInsetsListener((v, insets) -> {
@@ -61,6 +53,22 @@ public class MainActivity extends Activity {
         });
 
         webView.loadUrl("file:///android_asset/index.html");
+    }
+
+    private void applySystemBarAppearance(Window window) {
+        if (Build.VERSION.SDK_INT < 30) return;
+        try {
+            window.setStatusBarContrastEnforced(false);
+            window.setNavigationBarContrastEnforced(false);
+            WindowInsetsController controller = window.getInsetsController();
+            if (controller != null) {
+                controller.setSystemBarsAppearance(
+                        0, WindowInsetsController.APPEARANCE_LIGHT_STATUS_BARS
+                        | WindowInsetsController.APPEARANCE_LIGHT_NAVIGATION_BARS);
+            }
+        } catch (Exception ignored) {
+            // ROM 兼容性保护：个别机型在此时机获取 InsetsController 会异常，忽略即可
+        }
     }
 
     private void configureWebView() {
