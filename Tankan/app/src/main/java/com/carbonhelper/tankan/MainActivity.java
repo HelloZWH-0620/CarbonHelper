@@ -36,11 +36,14 @@ public class MainActivity extends Activity {
         // 在 onCreate 早期获取 InsetsController 会因 DecorView 未就绪而抛 NPE。
         applySystemBarAppearance(window);
 
-        // 将系统安全区（状态栏顶部、手势条底部）尺寸注入到页面 CSS 变量
+        // 将系统安全区（状态栏顶部、手势条底部）尺寸注入到页面 CSS 变量。
+        // 注意：WindowInsets 单位为物理像素，而 WebView 的 CSS px = dp，
+        // 必须除以屏幕密度转换，否则安全区会被放大（导致顶部留白过大）。
         webView.setOnApplyWindowInsetsListener((v, insets) -> {
-            int top = insets.getInsets(WindowInsets.Type.statusBars()).top;
-            int bottom = insets.getInsets(WindowInsets.Type.navigationBars()).bottom;
-            int caption = insets.getInsets(WindowInsets.Type.captionBar()).top;
+            float density = getResources().getDisplayMetrics().density;
+            int top = Math.round(insets.getInsets(WindowInsets.Type.statusBars()).top / density);
+            int bottom = Math.round(insets.getInsets(WindowInsets.Type.navigationBars()).bottom / density);
+            int caption = Math.round(insets.getInsets(WindowInsets.Type.captionBar()).top / density);
             int safeBottom = Math.max(bottom, caption);
             String js = "document.documentElement.style.setProperty('--sat','" + top + "px');"
                     + "document.documentElement.style.setProperty('--sab','" + safeBottom + "px');";

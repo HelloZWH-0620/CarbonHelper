@@ -1,6 +1,7 @@
 /* ============================================================
-   碳看版 · 看板页
-   Fluent 2 视觉规范 / iPhone 14 (390x844) 基准 · 响应式
+   碳看版 · 看板页 + 电器详情页
+   Fluent 2 视觉 / iPhone 14 (390x844) 基准 · 响应式
+   iOS 26 居中悬浮导航
    ============================================================ */
 
 @font-face { font-family: 'MiSans'; src: url('../fonts/MiSans-Regular.ttf'); font-weight: 400; }
@@ -12,27 +13,24 @@
   --sab: 0px;            /* 底部安全区（手势条），由原生注入 */
 
   /* Fluent 2 色板 */
-  --accent: #0F6CBD;              /* 主色 */
+  --accent: #0F6CBD;
   --accent-strong: #093A61;
   --accent-subtle: rgba(15, 108, 189, .12);
-  --warn: #C43E1C;                /* 强调数据（用电量） */
-  --text-strong: #17242B;         /* 卡片内主文字 */
-  --text-mid: #44535C;            /* 次要文字 */
-  --text-weak: #7A8790;           /* 辅助文字 */
+  --warn: #C43E1C;
+  --text-strong: #17242B;
+  --text-mid: #44535C;
+  --text-weak: #7A8790;
 
-  /* 材质：亚克力玻璃 */
-  --surface-glass: rgba(255, 255, 255, .62);
-  --surface-glass-strong: rgba(255, 255, 255, .84);
+  /* 亚克力玻璃材质 */
+  --surface-glass: rgba(255, 255, 255, .6);
+  --surface-glass-strong: rgba(255, 255, 255, .82);
   --hairline: rgba(255, 255, 255, .6);
 
-  /* Fluent 2 圆角阶梯 */
   --r-lg: 16px;
   --r-md: 12px;
-  --r-sm: 8px;
 
-  /* Fluent 2 阴影（低层级弥散） */
   --shadow-card: 0 1px 2px rgba(23, 36, 43, .05), 0 8px 24px rgba(23, 36, 43, .12);
-  --shadow-btn: 0 2px 6px rgba(15, 108, 189, .28), 0 8px 20px rgba(15, 108, 189, .18);
+  --shadow-nav: 0 10px 32px rgba(23, 36, 43, .2);
 }
 
 * { margin: 0; padding: 0; box-sizing: border-box; -webkit-tap-highlight-color: transparent; }
@@ -44,37 +42,42 @@ body {
   font-family: 'MiSans', system-ui, -apple-system, 'Segoe UI Variable', sans-serif;
   height: 100dvh;
   overflow: hidden;
-  display: flex;
-  flex-direction: column;
   color: #fff;
   user-select: none;
   -webkit-user-select: none;
 }
 
 #bg {
-  position: fixed; inset: 0; z-index: -1;
+  position: fixed; inset: 0; z-index: 0;
   background: url('../img/Background.png') center center / cover no-repeat;
 }
 
-/* ---------- 顶部标题区 ---------- */
-.top {
-  padding: calc(var(--sat) + 1.9rem) 1.6rem 1.1rem;
-  flex-shrink: 0;
+/* 页面层：整体滚动（标题/概览/电器一起滚动） */
+.page {
+  position: absolute; inset: 0; z-index: 1;
+  overflow-y: auto;
+  -webkit-overflow-scrolling: touch;
+  scrollbar-width: none;
 }
+.page::-webkit-scrollbar { display: none; }
+
+/* ============================================================
+   看板页
+   ============================================================ */
+
+/* 顶部标题区：压缩顶部留白 */
+.top { padding: calc(var(--sat) + .9rem) 1.6rem .2rem; }
 .top-title {
-  font-size: 2.9rem; font-weight: 700; line-height: 1.12; letter-spacing: .01em;
+  font-size: 2.3rem; font-weight: 700; line-height: 1.12; letter-spacing: .01em;
   text-shadow: 0 1px 3px rgba(23, 36, 43, .18);
 }
 .top-sub {
-  margin-top: .45rem; font-size: 1.5rem; font-weight: 400;
+  margin-top: .35rem; font-size: 1.35rem; font-weight: 400;
   color: rgba(255, 255, 255, .9); text-shadow: 0 1px 2px rgba(23, 36, 43, .15);
 }
 
-/* ---------- 主区域 ---------- */
 #main {
-  flex: 1; min-height: 0;
-  display: flex; flex-direction: column;
-  padding: 0 1.6rem; gap: 1.15rem;
+  padding: .9rem 1.6rem 8.5rem;   /* 底部留白给悬浮导航 */
 }
 
 /* Fluent 2 Card */
@@ -89,104 +92,277 @@ body {
 
 /* ---------- 用电概览卡片 ---------- */
 .overview {
-  display: flex; align-items: center; gap: 1.1rem;
-  padding: 1.7rem 1.9rem; flex-shrink: 0;
+  display: flex; align-items: center; gap: 1rem;
+  padding: 1.4rem 1.5rem;
 }
 .ov-left { flex: 1; min-width: 0; }
-.ov-label { font-size: 1.3rem; font-weight: 600; color: var(--text-mid); }
-.ov-value { display: flex; align-items: baseline; gap: .45rem; margin-top: .2rem; }
+.ov-label { font-size: 1.25rem; font-weight: 600; color: var(--text-mid); }
+.ov-value { display: flex; align-items: baseline; gap: .4rem; margin-top: .1rem; }
 .ov-num {
-  font-size: 4.4rem; font-weight: 700; letter-spacing: -.03em;
+  font-size: 3.6rem; font-weight: 700; letter-spacing: -.03em;
   color: var(--warn); line-height: 1;
 }
-.ov-unit { font-size: 1.8rem; font-weight: 600; color: var(--text-strong); }
-.ov-carbon { margin-top: .3rem; font-size: 1.25rem; color: var(--text-mid); }
-.ov-tips { list-style: none; margin-top: 1rem; display: grid; gap: .4rem; }
+.ov-unit { font-size: 1.6rem; font-weight: 600; color: var(--text-strong); }
+.ov-carbon { margin-top: .25rem; font-size: 1.2rem; color: var(--text-mid); }
+.ov-tips { list-style: none; margin-top: .85rem; display: grid; gap: .35rem; }
 .ov-tips li {
-  position: relative; padding-left: 1.1rem;
-  font-size: 1.25rem; color: var(--text-mid); line-height: 1.45;
+  position: relative; padding-left: 1.05rem;
+  font-size: 1.2rem; color: var(--text-mid); line-height: 1.45;
 }
 .ov-tips li::before {
   content: ''; position: absolute; left: 0; top: .62em;
-  width: .52rem; height: .52rem; border-radius: 50%;
+  width: .5rem; height: .5rem; border-radius: 50%;
   background: var(--accent);
 }
-.ov-ai { flex-shrink: 0; width: 9.4rem; height: 9.4rem; display: flex; align-items: center; justify-content: center; }
+.ov-ai { flex-shrink: 0; width: 7.6rem; height: 7.6rem; display: flex; align-items: center; justify-content: center; }
 .ov-ai img {
   width: 100%; height: 100%; object-fit: contain;
   filter: drop-shadow(0 6px 14px rgba(23, 36, 43, .16));
 }
 
-/* ---------- 电器瀑布流轮播 ---------- */
-.stage {
-  position: relative; flex: 1; min-height: 0;
-  touch-action: none;
+/* ---------- 电器双列网格 ---------- */
+.grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 1.05rem;
+  margin-top: 1.05rem;
 }
-.card-app {
-  position: absolute; left: 0; right: 0; top: 0;
+.app-card {
   display: flex; flex-direction: column; align-items: center;
-  padding: 1.5rem 1.8rem 1.3rem;
+  padding: 1rem .75rem .9rem;
   background: var(--surface-glass-strong);
   -webkit-backdrop-filter: blur(24px) saturate(160%);
   backdrop-filter: blur(24px) saturate(160%);
   border: 1px solid var(--hairline);
   border-radius: var(--r-lg);
   box-shadow: var(--shadow-card);
-  will-change: transform;
-  transform: translateZ(0);
+  cursor: pointer;
+  transition: transform .15s ease;
 }
-.card-app .pic {
-  flex: 1; min-height: 0; width: 100%;
-  display: flex; align-items: center; justify-content: center;
-}
-.card-app .pic img {
-  max-width: 84%; max-height: 100%;
+.app-card:active { transform: scale(.96); }
+.app-pic { height: 6.4rem; width: 100%; display: flex; align-items: center; justify-content: center; }
+.app-pic img {
+  max-width: 88%; max-height: 100%;
   object-fit: contain;
-  filter: drop-shadow(0 4px 12px rgba(23, 36, 43, .16));
+  filter: drop-shadow(0 4px 10px rgba(23, 36, 43, .16));
 }
-.card-app .name {
-  margin-top: .5rem;
-  font-size: 1.75rem; font-weight: 700; color: var(--text-strong);
-}
-.card-app .stats {
-  width: 100%; display: flex; justify-content: space-around;
-  margin-top: .85rem; padding-top: .85rem;
-  border-top: 1px solid rgba(23, 36, 43, .08);
-}
-.card-app .stat { text-align: center; }
-.card-app .stat .k { font-size: 1.15rem; color: var(--text-weak); }
-.card-app .stat .v { margin-top: .18rem; font-size: 1.5rem; font-weight: 600; color: var(--text-strong); }
+.app-name { margin-top: .35rem; font-size: 1.35rem; font-weight: 700; color: var(--text-strong); }
 
-/* ---------- 添加电器（Fluent 2 主按钮） ---------- */
+/* 指标胶囊（随机轮播） */
+.app-metric {
+  margin-top: .6rem; width: 100%;
+  display: flex; align-items: center; justify-content: space-between; gap: .3rem;
+  padding: .34rem .65rem;
+  border-radius: 999px;
+  background: var(--accent-subtle);
+  transition: opacity .18s ease, transform .18s ease;
+  will-change: opacity, transform;
+}
+.app-card.flip .app-metric { opacity: 0; transform: translateY(.3rem); }
+.metric-label { font-size: 1rem; color: var(--accent-strong); white-space: nowrap; }
+.metric-val { font-size: 1.05rem; font-weight: 600; color: var(--text-strong); white-space: nowrap; }
+
+/* ---------- 添加电器 ---------- */
 .btn-add {
-  flex-shrink: 0; margin-bottom: .5rem; height: 4.5rem;
-  display: flex; align-items: center; justify-content: center; gap: .6rem;
+  width: 100%; margin-top: 1.05rem; height: 4.2rem;
+  display: flex; align-items: center; justify-content: center; gap: .55rem;
   border: none; border-radius: 999px;
   background: var(--accent); color: #fff;
-  font-family: inherit; font-size: 1.6rem; font-weight: 600;
-  box-shadow: var(--shadow-btn);
+  font-family: inherit; font-size: 1.55rem; font-weight: 600;
+  box-shadow: 0 2px 6px rgba(15, 108, 189, .28), 0 8px 20px rgba(15, 108, 189, .18);
 }
 .btn-add:active { background: var(--accent-strong); }
-.btn-add svg { width: 2rem; height: 2rem; }
+.btn-add svg { width: 1.9rem; height: 1.9rem; }
 
-/* ---------- 底部导航（Fluent 2 导航栏） ---------- */
-.bottom-nav {
-  flex-shrink: 0;
-  display: flex; align-items: center; justify-content: space-between;
-  min-height: calc(3.6rem + var(--sab));
-  padding: .45rem 1.5rem calc(var(--sab) + .35rem);
-  background: var(--surface-glass);
+/* ============================================================
+   居中悬浮导航（iOS 26 液态玻璃）
+   ============================================================ */
+.float-nav {
+  position: fixed;
+  left: 50%; bottom: calc(var(--sab) + .8rem);
+  transform: translateX(-50%);
+  z-index: 40;
+  display: flex; align-items: center;
+  gap: .35rem;
+  padding: .4rem;
+  border-radius: 999px;
+  background: rgba(255, 255, 255, .72);
+  -webkit-backdrop-filter: blur(28px) saturate(180%);
+  backdrop-filter: blur(28px) saturate(180%);
+  border: 1px solid rgba(255, 255, 255, .65);
+  box-shadow: var(--shadow-nav);
+}
+.nav-item {
+  display: flex; align-items: center; gap: .4rem;
+  padding: .55rem .85rem;
+  border: none; border-radius: 999px; background: none;
+  font-family: inherit; font-size: 1.3rem; font-weight: 600;
+  color: var(--text-mid); cursor: pointer;
+  transition: background .2s ease, color .2s ease, box-shadow .2s ease;
+}
+.nav-item .nav-ic { width: 1.9rem; height: 1.9rem; display: block; }
+.nav-item.active {
+  background: var(--accent);
+  color: #fff;
+  box-shadow: 0 4px 14px rgba(15, 108, 189, .35);
+}
+.nav-label { font-size: 1.3rem; }
+
+/* ============================================================
+   电器详情页
+   ============================================================ */
+.page.detail {
+  z-index: 20;
+  background: url('../img/Background.png') center center / cover no-repeat;
+  transform: translateX(100%);
+  transition: transform .38s cubic-bezier(.32, .72, 0, 1);
+  pointer-events: none;
+}
+.page.detail.open {
+  transform: translateX(0);
+  pointer-events: auto;
+}
+
+/* 圆形浮动按钮（iOS 26） */
+.fab {
+  position: fixed;
+  top: calc(var(--sat) + .75rem);
+  z-index: 30;
+  width: 2.85rem; height: 2.85rem;
+  border-radius: 50%;
+  display: flex; align-items: center; justify-content: center;
+  background: rgba(255, 255, 255, .72);
+  -webkit-backdrop-filter: blur(20px) saturate(180%);
+  backdrop-filter: blur(20px) saturate(180%);
+  border: 1px solid rgba(255, 255, 255, .65);
+  box-shadow: 0 4px 16px rgba(23, 36, 43, .18);
+  color: var(--text-strong);
+  cursor: pointer;
+}
+.fab:active { transform: scale(.94); }
+.fab-back { left: 1rem; }
+.fab-more { right: 1rem; }
+.fab svg { width: 1.55rem; height: 1.55rem; }
+
+.detail-body { padding: calc(var(--sat) + 3.4rem) 1.6rem 3rem; }
+
+/* 电器头图 */
+.detail-hero { text-align: center; margin-bottom: 1.2rem; }
+.hero-pic {
+  width: 8.6rem; height: 8.6rem; margin: 0 auto;
+  display: flex; align-items: center; justify-content: center;
+  background: var(--surface-glass-strong);
   -webkit-backdrop-filter: blur(24px) saturate(160%);
   backdrop-filter: blur(24px) saturate(160%);
-  border-top: 1px solid var(--hairline);
+  border: 1px solid var(--hairline);
+  border-radius: 1.8rem;
+  box-shadow: var(--shadow-card);
 }
-.nav-group { display: flex; align-items: center; gap: 1.3rem; }
-.nav-item {
-  display: flex; flex-direction: column; align-items: center; gap: .18rem;
-  padding: .3rem .5rem; border: none; background: none;
-  font-family: inherit; color: var(--text-weak); cursor: pointer;
+.hero-pic img {
+  max-width: 82%; max-height: 82%;
+  object-fit: contain;
+  filter: drop-shadow(0 4px 10px rgba(23, 36, 43, .16));
 }
-.nav-item .nav-ic { width: 2.7rem; height: 2.7rem; display: block; }
-.nav-item.active { color: var(--accent); }
-.nav-item.active .nav-label { font-weight: 600; }
-.nav-label { font-size: 1.2rem; color: inherit; }
+.hero-name {
+  margin-top: .8rem; font-size: 2rem; font-weight: 700; line-height: 1.2;
+  color: #fff; text-shadow: 0 1px 4px rgba(23, 36, 43, .25);
+}
+.hero-sub {
+  margin-top: .25rem; font-size: 1.2rem;
+  color: rgba(255, 255, 255, .88); text-shadow: 0 1px 2px rgba(23, 36, 43, .2);
+}
+
+/* 详情卡片区 */
+.detail-cards { display: grid; gap: 1.05rem; }
+.dcard { padding: 1.3rem 1.35rem; }
+.dcard-title {
+  font-size: 1.35rem; font-weight: 700; color: var(--text-strong);
+  margin-bottom: 1rem;
+}
+
+/* 卡片1：本日用电时段统计（横式柱状） */
+.slot-list { display: grid; gap: .5rem; }
+.slot {
+  display: flex; align-items: center; gap: .6rem;
+}
+.slot-label { flex-shrink: 0; width: 3.4rem; font-size: 1.05rem; color: var(--text-mid); }
+.slot-track {
+  flex: 1; height: .7rem; border-radius: 999px;
+  background: rgba(23, 36, 43, .08);
+  overflow: hidden;
+}
+.slot-fill {
+  height: 100%; border-radius: 999px;
+  background: var(--accent);
+  transition: width .6s cubic-bezier(.2,.8,.2,1);
+}
+.slot-fill.hot { background: var(--warn); }
+.slot-val { flex-shrink: 0; width: 3rem; text-align: right; font-size: 1.05rem; font-weight: 600; color: var(--text-strong); }
+
+/* 卡片2：近7日用电趋势 */
+.trend {
+  display: flex; align-items: flex-end; justify-content: space-between;
+  height: 9rem;
+}
+.tcol {
+  flex: 1; height: 100%;
+  display: flex; flex-direction: column; align-items: center; justify-content: flex-end;
+  gap: .3rem;
+}
+.tbar {
+  width: 60%; border-radius: 6px 6px 3px 3px;
+  background: linear-gradient(180deg, #2E8BD8, #6FB9EC);
+  display: flex; align-items: flex-start; justify-content: center;
+  padding-top: .2rem;
+  transition: height .6s cubic-bezier(.2,.8,.2,1);
+}
+.tbar .tval { font-size: .85rem; font-weight: 600; color: #fff; }
+.tday { font-size: 1rem; color: var(--text-mid); }
+
+/* 卡片3：今日碳排放（环形） */
+.carbon {
+  display: flex; align-items: center; justify-content: center; gap: 1.2rem;
+}
+.ring { width: 7.2rem; height: 7.2rem; transform: rotate(-90deg); }
+.ring-bg { fill: none; stroke: rgba(23, 36, 43, .08); stroke-width: 8; }
+.ring-fg {
+  fill: none; stroke: var(--accent); stroke-width: 8; stroke-linecap: round;
+  transition: stroke-dashoffset 1s cubic-bezier(.2,.8,.2,1);
+}
+.carbon-in { position: absolute; }
+.carbon-v { font-size: 1.7rem; font-weight: 700; color: var(--text-strong); }
+.carbon-d { display: block; margin-top: .2rem; font-size: 1.05rem; color: var(--text-mid); }
+.carbon-extra { font-size: 1.15rem; color: var(--text-mid); line-height: 1.6; }
+
+/* 卡片4：低碳行为打卡 */
+.act-list { display: grid; gap: .7rem; }
+.act {
+  display: flex; align-items: center; gap: .7rem;
+  padding: .55rem .8rem;
+  background: rgba(23, 36, 43, .04);
+  border-radius: var(--r-md);
+}
+.act-check {
+  flex-shrink: 0; width: 1.5rem; height: 1.5rem;
+  border-radius: 50%;
+  border: 2px solid var(--text-weak);
+  display: flex; align-items: center; justify-content: center;
+  font-size: .9rem; color: transparent;
+}
+.act-check.done {
+  border-color: #0E8A5F; background: #0E8A5F; color: #fff;
+}
+.act-name { flex: 1; font-size: 1.2rem; color: var(--text-strong); }
+.act-state { flex-shrink: 0; font-size: 1.05rem; color: var(--text-weak); }
+
+/* 卡片5：节能建议 */
+.tip-list { display: grid; gap: .7rem; }
+.tip {
+  display: flex; align-items: flex-start; gap: .6rem;
+  font-size: 1.2rem; color: var(--text-mid); line-height: 1.5;
+}
+.tip-dot {
+  flex-shrink: 0; margin-top: .5em;
+  width: .5rem; height: .5rem; border-radius: 50%;
+  background: var(--accent);
+}

@@ -9,43 +9,44 @@
 <body>
   <div id="bg" aria-hidden="true"></div>
 
-  <header class="top">
-    <h1 class="top-title">宿舍用电</h1>
-    <p class="top-sub">北宿2栋-406</p>
-  </header>
+  <!-- ========== 看板页（标题/概览/电器 整体滚动） ========== -->
+  <div id="pageBoard" class="page board">
+    <header class="top">
+      <h1 class="top-title">宿舍用电</h1>
+      <p class="top-sub">北宿2栋-406</p>
+    </header>
 
-  <main id="main">
-    <!-- 用电概览卡片 -->
-    <section class="card overview" aria-label="本月用电概览">
-      <div class="ov-left">
-        <p class="ov-label">本月用电量</p>
-        <p class="ov-value"><span class="ov-num">38</span><span class="ov-unit">度</span></p>
-        <p class="ov-carbon">约 22.04 KG 碳排放量</p>
-        <ul class="ov-tips">
-          <li>请注意不要长时间开灯。</li>
-          <li>空调温度保持26摄氏度会更好。</li>
-        </ul>
-      </div>
-      <div class="ov-ai">
-        <img src="img/AI.png" alt="AI助手">
-      </div>
-    </section>
+    <main id="main">
+      <!-- 用电概览卡片 -->
+      <section class="card overview" aria-label="本月用电概览">
+        <div class="ov-left">
+          <p class="ov-label">本月用电量</p>
+          <p class="ov-value"><span class="ov-num">38</span><span class="ov-unit">度</span></p>
+          <p class="ov-carbon">约 22.04 KG 碳排放量</p>
+          <ul class="ov-tips">
+            <li>请注意不要长时间开灯。</li>
+            <li>空调温度保持26摄氏度会更好。</li>
+          </ul>
+        </div>
+        <div class="ov-ai">
+          <img src="img/AI.png" alt="AI助手">
+        </div>
+      </section>
 
-    <!-- 电器瀑布流轮播（上下跟手切换） -->
-    <section id="stage" class="stage" aria-label="电器列表"></section>
+      <!-- 电器双列网格（指标随机错峰轮播） -->
+      <section id="appGrid" class="grid" aria-label="电器列表"></section>
 
-    <!-- 添加电器 -->
-    <button id="addBtn" class="btn-add" type="button">
-      <svg viewBox="0 0 24 24" fill="currentColor" aria-hidden="true">
-        <path d="M12 2a10 10 0 1 0 0 20 10 10 0 0 0 0-20Zm4.75 11h-3.75v3.75a1 1 0 1 1-2 0V13H7.25a1 1 0 1 1 0-2H11V7.25a1 1 0 1 1 2 0V11h3.75a1 1 0 1 1 0 2Z"/>
-      </svg>
-      <span>添加电器</span>
-    </button>
-  </main>
+      <!-- 添加电器 -->
+      <button id="addBtn" class="btn-add" type="button">
+        <svg viewBox="0 0 24 24" fill="currentColor" aria-hidden="true">
+          <path d="M12 2a10 10 0 1 0 0 20 10 10 0 0 0 0-20Zm4.75 11h-3.75v3.75a1 1 0 1 1-2 0V13H7.25a1 1 0 1 1 0-2H11V7.25a1 1 0 1 1 2 0V11h3.75a1 1 0 1 1 0 2Z"/>
+        </svg>
+        <span>添加电器</span>
+      </button>
+    </main>
 
-  <!-- 底部导航 -->
-  <nav class="bottom-nav" aria-label="导航">
-    <div class="nav-group">
+    <!-- 居中悬浮导航（iOS 26 风格） -->
+    <nav class="float-nav" aria-label="导航">
       <button class="nav-item active" id="navBoard" type="button">
         <svg class="nav-ic" viewBox="0 0 24 24" fill="none" aria-hidden="true">
           <path d="M16.1698 10.0603H7.82982C6.64982 10.0603 6.23983 9.27031 6.92983 8.31031L11.0998 2.47031C11.5898 1.77031 12.4099 1.77031 12.8899 2.47031L17.0598 8.31031C17.7598 9.27031 17.3498 10.0603 16.1698 10.0603Z" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
@@ -62,8 +63,6 @@
           <path d="M12.52 2.0708L13.05 3.1308C13.12 3.2808 13.31 3.42079 13.47 3.44079L14.43 3.6008C15.04 3.7008 15.19 4.15078 14.75 4.58078L14 5.33078C13.87 5.46078 13.8 5.70079 13.84 5.87079L14.05 6.7908C14.22 7.5208 13.83 7.80081 13.19 7.42081L12.29 6.89081C12.13 6.79081 11.86 6.79081 11.7 6.89081L10.8 7.42081C10.16 7.80081 9.76998 7.5208 9.93998 6.7908L10.15 5.87079C10.19 5.70079 10.12 5.45078 9.98999 5.33078L9.24999 4.59079C8.80999 4.15079 8.94999 3.71078 9.56999 3.61078L10.53 3.4508C10.69 3.4208 10.88 3.28081 10.95 3.14081L11.48 2.08078C11.77 1.50078 12.23 1.5008 12.52 2.0708Z" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
         </svg>
       </button>
-    </div>
-    <div class="nav-group">
       <button class="nav-item" id="navUser" type="button">
         <svg class="nav-ic" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true">
           <path opacity="0.4" d="M22 7.81V16.19C22 19 20.71 20.93 18.44 21.66C17.78 21.89 17.02 22 16.19 22H7.81C6.98 22 6.22 21.89 5.56 21.66C3.29 20.93 2 19 2 16.19V7.81C2 4.17 4.17 2 7.81 2H16.19C19.83 2 22 4.17 22 7.81Z"/>
@@ -71,8 +70,28 @@
           <path d="M15.58 11.58C15.58 13.56 13.98 15.17 12 15.17C10.02 15.17 8.42004 13.56 8.42004 11.58C8.42004 9.60002 10.02 8 12 8C13.98 8 15.58 9.60002 15.58 11.58Z"/>
         </svg>
       </button>
-    </div>
-  </nav>
+    </nav>
+  </div>
+
+  <!-- ========== 电器详情页 ========== -->
+  <div id="pageDetail" class="page detail">
+    <button id="btnBack" class="fab fab-back" type="button" aria-label="返回">
+      <svg viewBox="0 0 24 24" fill="currentColor" aria-hidden="true">
+        <path d="M12 22.75C6.07 22.75 1.25 17.93 1.25 12C1.25 6.07 6.07 1.25 12 1.25C17.93 1.25 22.75 6.07 22.75 12C22.75 17.93 17.93 22.75 12 22.75ZM12 2.75C6.9 2.75 2.75 6.9 2.75 12C2.75 17.1 6.9 21.25 12 21.25C17.1 21.25 21.25 17.1 21.25 12C21.25 6.9 17.1 2.75 12 2.75Z"/>
+        <path d="M15.5 12.75H9.5C9.09 12.75 8.75 12.41 8.75 12C8.75 11.59 9.09 11.25 9.5 11.25H15.5C15.91 11.25 16.25 11.59 16.25 12C16.25 12.41 15.91 12.75 15.5 12.75Z"/>
+        <path d="M11.4999 15.7504C11.3099 15.7504 11.1199 15.6804 10.9699 15.5304L7.96994 12.5304C7.67994 12.2404 7.67994 11.7604 7.96994 11.4704L10.9699 8.47043C11.2599 8.18043 11.7399 8.18043 12.0299 8.47043C12.3199 8.76043 12.3199 9.24043 12.0299 9.53043L9.55994 12.0004L12.0299 14.4704C12.3199 14.7604 12.3199 15.2404 12.0299 15.5304C11.8799 15.6804 11.6899 15.7504 11.4999 15.7504Z"/>
+      </svg>
+    </button>
+    <button id="btnMore" class="fab fab-more" type="button" aria-label="更多">
+      <svg viewBox="0 0 24 24" fill="none" aria-hidden="true">
+        <path d="M12 22C17.5 22 22 17.5 22 12C22 6.5 17.5 2 12 2C6.5 2 2 6.5 2 12C2 17.5 6.5 22 12 22Z" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
+        <path d="M15.9965 12H16.0054" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+        <path d="M11.9955 12H12.0045" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+        <path d="M7.99451 12H8.00349" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+      </svg>
+    </button>
+    <div id="detailBody" class="detail-body"></div>
+  </div>
 
   <script src="js/app.js"></script>
 </body>
