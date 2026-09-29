@@ -1,0 +1,192 @@
+/* ============================================================
+   碳看版 · 看板页
+   Fluent 2 视觉规范 / iPhone 14 (390x844) 基准 · 响应式
+   ============================================================ */
+
+@font-face { font-family: 'MiSans'; src: url('../fonts/MiSans-Regular.ttf'); font-weight: 400; }
+@font-face { font-family: 'MiSans'; src: url('../fonts/MiSans-Semibold.ttf'); font-weight: 600; }
+@font-face { font-family: 'MiSans'; src: url('../fonts/MiSans-Bold.ttf'); font-weight: 700; }
+
+:root {
+  --sat: 0px;            /* 顶部安全区（状态栏），由原生注入 */
+  --sab: 0px;            /* 底部安全区（手势条），由原生注入 */
+
+  /* Fluent 2 色板 */
+  --accent: #0F6CBD;              /* 主色 */
+  --accent-strong: #093A61;
+  --accent-subtle: rgba(15, 108, 189, .12);
+  --warn: #C43E1C;                /* 强调数据（用电量） */
+  --text-strong: #17242B;         /* 卡片内主文字 */
+  --text-mid: #44535C;            /* 次要文字 */
+  --text-weak: #7A8790;           /* 辅助文字 */
+
+  /* 材质：亚克力玻璃 */
+  --surface-glass: rgba(255, 255, 255, .62);
+  --surface-glass-strong: rgba(255, 255, 255, .84);
+  --hairline: rgba(255, 255, 255, .6);
+
+  /* Fluent 2 圆角阶梯 */
+  --r-lg: 16px;
+  --r-md: 12px;
+  --r-sm: 8px;
+
+  /* Fluent 2 阴影（低层级弥散） */
+  --shadow-card: 0 1px 2px rgba(23, 36, 43, .05), 0 8px 24px rgba(23, 36, 43, .12);
+  --shadow-btn: 0 2px 6px rgba(15, 108, 189, .28), 0 8px 20px rgba(15, 108, 189, .18);
+}
+
+* { margin: 0; padding: 0; box-sizing: border-box; -webkit-tap-highlight-color: transparent; }
+
+/* 以 iPhone 14 (390px) 为基准做线性缩放 */
+html { font-size: min(calc(100vw / 39), 14px); }
+
+body {
+  font-family: 'MiSans', system-ui, -apple-system, 'Segoe UI Variable', sans-serif;
+  height: 100dvh;
+  overflow: hidden;
+  display: flex;
+  flex-direction: column;
+  color: #fff;
+  user-select: none;
+  -webkit-user-select: none;
+}
+
+#bg {
+  position: fixed; inset: 0; z-index: -1;
+  background: url('../img/Background.png') center center / cover no-repeat;
+}
+
+/* ---------- 顶部标题区 ---------- */
+.top {
+  padding: calc(var(--sat) + 1.9rem) 1.6rem 1.1rem;
+  flex-shrink: 0;
+}
+.top-title {
+  font-size: 2.9rem; font-weight: 700; line-height: 1.12; letter-spacing: .01em;
+  text-shadow: 0 1px 3px rgba(23, 36, 43, .18);
+}
+.top-sub {
+  margin-top: .45rem; font-size: 1.5rem; font-weight: 400;
+  color: rgba(255, 255, 255, .9); text-shadow: 0 1px 2px rgba(23, 36, 43, .15);
+}
+
+/* ---------- 主区域 ---------- */
+#main {
+  flex: 1; min-height: 0;
+  display: flex; flex-direction: column;
+  padding: 0 1.6rem; gap: 1.15rem;
+}
+
+/* Fluent 2 Card */
+.card {
+  background: var(--surface-glass);
+  -webkit-backdrop-filter: blur(24px) saturate(160%);
+  backdrop-filter: blur(24px) saturate(160%);
+  border: 1px solid var(--hairline);
+  border-radius: var(--r-lg);
+  box-shadow: var(--shadow-card);
+}
+
+/* ---------- 用电概览卡片 ---------- */
+.overview {
+  display: flex; align-items: center; gap: 1.1rem;
+  padding: 1.7rem 1.9rem; flex-shrink: 0;
+}
+.ov-left { flex: 1; min-width: 0; }
+.ov-label { font-size: 1.3rem; font-weight: 600; color: var(--text-mid); }
+.ov-value { display: flex; align-items: baseline; gap: .45rem; margin-top: .2rem; }
+.ov-num {
+  font-size: 4.4rem; font-weight: 700; letter-spacing: -.03em;
+  color: var(--warn); line-height: 1;
+}
+.ov-unit { font-size: 1.8rem; font-weight: 600; color: var(--text-strong); }
+.ov-carbon { margin-top: .3rem; font-size: 1.25rem; color: var(--text-mid); }
+.ov-tips { list-style: none; margin-top: 1rem; display: grid; gap: .4rem; }
+.ov-tips li {
+  position: relative; padding-left: 1.1rem;
+  font-size: 1.25rem; color: var(--text-mid); line-height: 1.45;
+}
+.ov-tips li::before {
+  content: ''; position: absolute; left: 0; top: .62em;
+  width: .52rem; height: .52rem; border-radius: 50%;
+  background: var(--accent);
+}
+.ov-ai { flex-shrink: 0; width: 9.4rem; height: 9.4rem; display: flex; align-items: center; justify-content: center; }
+.ov-ai img {
+  width: 100%; height: 100%; object-fit: contain;
+  filter: drop-shadow(0 6px 14px rgba(23, 36, 43, .16));
+}
+
+/* ---------- 电器瀑布流轮播 ---------- */
+.stage {
+  position: relative; flex: 1; min-height: 0;
+  touch-action: none;
+}
+.card-app {
+  position: absolute; left: 0; right: 0; top: 0;
+  display: flex; flex-direction: column; align-items: center;
+  padding: 1.5rem 1.8rem 1.3rem;
+  background: var(--surface-glass-strong);
+  -webkit-backdrop-filter: blur(24px) saturate(160%);
+  backdrop-filter: blur(24px) saturate(160%);
+  border: 1px solid var(--hairline);
+  border-radius: var(--r-lg);
+  box-shadow: var(--shadow-card);
+  will-change: transform;
+  transform: translateZ(0);
+}
+.card-app .pic {
+  flex: 1; min-height: 0; width: 100%;
+  display: flex; align-items: center; justify-content: center;
+}
+.card-app .pic img {
+  max-width: 84%; max-height: 100%;
+  object-fit: contain;
+  filter: drop-shadow(0 4px 12px rgba(23, 36, 43, .16));
+}
+.card-app .name {
+  margin-top: .5rem;
+  font-size: 1.75rem; font-weight: 700; color: var(--text-strong);
+}
+.card-app .stats {
+  width: 100%; display: flex; justify-content: space-around;
+  margin-top: .85rem; padding-top: .85rem;
+  border-top: 1px solid rgba(23, 36, 43, .08);
+}
+.card-app .stat { text-align: center; }
+.card-app .stat .k { font-size: 1.15rem; color: var(--text-weak); }
+.card-app .stat .v { margin-top: .18rem; font-size: 1.5rem; font-weight: 600; color: var(--text-strong); }
+
+/* ---------- 添加电器（Fluent 2 主按钮） ---------- */
+.btn-add {
+  flex-shrink: 0; margin-bottom: .5rem; height: 4.5rem;
+  display: flex; align-items: center; justify-content: center; gap: .6rem;
+  border: none; border-radius: 999px;
+  background: var(--accent); color: #fff;
+  font-family: inherit; font-size: 1.6rem; font-weight: 600;
+  box-shadow: var(--shadow-btn);
+}
+.btn-add:active { background: var(--accent-strong); }
+.btn-add svg { width: 2rem; height: 2rem; }
+
+/* ---------- 底部导航（Fluent 2 导航栏） ---------- */
+.bottom-nav {
+  flex-shrink: 0;
+  display: flex; align-items: center; justify-content: space-between;
+  min-height: calc(3.6rem + var(--sab));
+  padding: .45rem 1.5rem calc(var(--sab) + .35rem);
+  background: var(--surface-glass);
+  -webkit-backdrop-filter: blur(24px) saturate(160%);
+  backdrop-filter: blur(24px) saturate(160%);
+  border-top: 1px solid var(--hairline);
+}
+.nav-group { display: flex; align-items: center; gap: 1.3rem; }
+.nav-item {
+  display: flex; flex-direction: column; align-items: center; gap: .18rem;
+  padding: .3rem .5rem; border: none; background: none;
+  font-family: inherit; color: var(--text-weak); cursor: pointer;
+}
+.nav-item .nav-ic { width: 2.7rem; height: 2.7rem; display: block; }
+.nav-item.active { color: var(--accent); }
+.nav-item.active .nav-label { font-weight: 600; }
+.nav-label { font-size: 1.2rem; color: inherit; }
