@@ -1,0 +1,98 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover, user-scalable=no">
+<title>碳看版</title>
+<link rel="stylesheet" href="css/style.css">
+</head>
+<body>
+  <div id="bg" aria-hidden="true"></div>
+
+  <!-- ========== 看板页（标题/概览/电器 整体滚动） ========== -->
+  <div id="pageBoard" class="page board">
+    <header class="top">
+      <h1 class="top-title">宿舍用电</h1>
+      <p class="top-sub">北宿2栋-406</p>
+    </header>
+
+    <main id="main">
+      <!-- 用电概览卡片 -->
+      <section class="card overview" aria-label="本月用电概览">
+        <div class="ov-left">
+          <p class="ov-label">本月用电量</p>
+          <p class="ov-value"><span class="ov-num">38</span><span class="ov-unit">度</span></p>
+          <p class="ov-carbon">约 22.04 KG 碳排放量</p>
+          <ul class="ov-tips">
+            <li>请注意不要长时间开灯。</li>
+            <li>空调温度保持26摄氏度会更好。</li>
+          </ul>
+        </div>
+        <div class="ov-ai">
+          <img src="img/AI.png" alt="AI助手">
+        </div>
+      </section>
+
+      <!-- 电器双列网格（指标随机错峰轮播） -->
+      <section id="appGrid" class="grid" aria-label="电器列表"></section>
+    </main>
+  </div>
+
+  <!-- ========== 低碳排行榜页 ========== -->
+  <div id="pageRank" class="page rank-page">
+    <header class="top rank-top">
+      <div class="rank-top-txt">
+        <h1 class="top-title">低碳排行榜</h1>
+        <p class="top-sub">每一度绿电，都是给地球的礼物</p>
+      </div>
+      <button class="mall-entry" id="mallEntry" aria-label="进入碳商城">🛒 碳商城</button>
+    </header>
+    <main id="rankMain">
+      <div class="seg" id="rankSeg" role="tablist">
+        <button class="seg-item active" data-scope="class">本班</button>
+        <button class="seg-item" data-scope="school">本校</button>
+        <button class="seg-item" data-scope="city">本市</button>
+      </div>
+      <section class="rank-podium" id="rankPodium"></section>
+      <section class="rank-list" id="rankList"></section>
+    </main>
+  </div>
+
+  <!-- ========== 我的（个人中心） ========== -->
+  <div id="pageMine" class="page mine-page">
+    <div id="mineBody" class="sub-body"></div>
+  </div>
+
+  <!-- ========== 宿舍用电总览页（大卡片点入，卡片放大动画） ========== -->
+  <div id="pageDorm" class="page follow-page">
+    <div id="dormBody" class="sub-body"></div>
+  </div>
+
+  <!-- ========== AI 智能建议对话页（Siri 风格，侧滑跟手） ========== -->
+  <div id="pageAi" class="page follow-page siri-page">
+    <div id="aiBody"></div>
+  </div>
+
+  <!-- ========== 低碳答题页（排行榜下方「参与答题」进入，侧滑跟手） ========== -->
+  <div id="pageQuiz" class="page follow-page">
+    <div id="quizBody" class="sub-body"></div>
+  </div>
+
+  <!-- ========== 碳商城页（排行榜右上角「碳商城」进入，侧滑跟手） ========== -->
+  <div id="pageMall" class="page follow-page">
+    <div id="mallBody" class="sub-body"></div>
+  </div>
+
+  <!-- ========== 添加设备页（看板下方「添加设备」进入，侧滑跟手） ========== -->
+  <div id="pageAdd" class="page follow-page">
+    <div id="addBody" class="sub-body"></div>
+  </div>
+
+  <!-- ========== 电器详情页（卡片中心放大动画 + 左边缘侧滑跟手） ========== -->
+  <div id="pageDetail" class="page detail follow-page">
+    <div id="detailBody" class="detail-body"></div>
+  </div>
+
+  <script src="js/app.js"></script>
+</body>
+</html>

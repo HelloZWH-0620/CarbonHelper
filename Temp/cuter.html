@@ -1,0 +1,280 @@
+﻿<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<title>碳小绒</title>
+<style>
+  *{ box-sizing:border-box; }
+  body{
+    margin:0; min-height:100vh;
+    display:flex; flex-direction:column;
+    align-items:center; justify-content:center;
+    font-family:"Microsoft YaHei",sans-serif;
+    background: radial-gradient(circle at 50% 20%, #f4fdf5, #a9ddb8 70%, #7cc792);
+    overflow:hidden; user-select:none;
+  }
+  .stage{ display:flex; flex-direction:column; align-items:center; position:relative; }
+  .pet-area{ position:relative; width:220px; height:220px; display:flex; align-items:center; justify-content:center; }
+  .bubble{
+    position:absolute; left:50%; bottom:100%; width:max-content; max-width:250px;
+    padding:10px 16px; background:#fff; color:#204a33; font-size:14px;
+    border-radius:16px; box-shadow:0 8px 20px rgba(30,90,60,.2);
+    opacity:0; pointer-events:none; transform:translate(-50%,10px);
+    transition:opacity .2s, transform .25s; z-index:20;
+  }
+  .bubble.show{ opacity:1; transform:translate(-50%,0); }
+  .pet{ position:relative; width:200px; height:200px; cursor:pointer; }
+  .pet-inner{ width:100%; height:100%; animation:float 3.2s ease-in-out infinite; }
+  @keyframes float{
+    0%,100%{ transform:translateY(0); }
+    50%{ transform:translateY(-12px); }
+  }
+  .pet-body{ position:relative; width:100%; height:100%; transform-origin:50% 88%; }
+  .pet-body.jump{ animation:jump .7s ease; }
+  @keyframes jump{
+    0%{ transform:translateY(0) scale(1,1); }
+    20%{ transform:translateY(0) scale(1.14,.86); }
+    45%{ transform:translateY(-60px) scale(.94,1.08); }
+    65%{ transform:translateY(-6px) scale(1.06,.94); }
+    80%{ transform:translateY(0) scale(1.1,.9); }
+    100%{ transform:translateY(0) scale(1,1); }
+  }
+  .shadow{
+    position:absolute; left:50%; bottom:2px; width:118px; height:20px;
+    margin-left:-59px; border-radius:50%;
+    background:radial-gradient(ellipse at center, rgba(28,82,48,.35), rgba(28,82,48,0) 72%);
+    z-index:0;
+  }
+  .fluff{
+    position:absolute; left:6px; top:6px; right:6px; bottom:6px;
+    border-radius:50%;
+    background: radial-gradient(circle at 30% 24%, #e9ffdd 0%, #a9ee9e 15%, #63cb70 40%, #2f9147 72%, #1c6b33 100%);
+    box-shadow: inset -14px -18px 38px rgba(12,60,30,.38),
+                inset 12px 14px 32px rgba(255,255,255,.28);
+    z-index:2;
+  }
+  .shine{
+    position:absolute; left:6px; top:6px; right:6px; bottom:6px;
+    border-radius:50%;
+    background: radial-gradient(circle at 32% 24%, rgba(255,255,255,.8) 0%, rgba(255,255,255,.22) 24%, rgba(255,255,255,0) 48%);
+    z-index:4; pointer-events:none;
+  }
+  .eye{
+    position:absolute; top:76px; width:30px; height:34px; border-radius:50%;
+    background: radial-gradient(circle at 40% 34%, #3a5f50, #16241d 72%);
+    overflow:hidden; z-index:6;
+  }
+  .eye.left{ left:56px; }
+  .eye.right{ right:56px; }
+  .eye.blink{ transform:scaleY(.08); }
+  .glint{
+    position:absolute; top:7px; left:7px; width:11px; height:11px;
+    border-radius:50%; background:#fff; box-shadow:0 0 7px rgba(255,255,255,.95);
+  }
+  .cheek{
+    position:absolute; top:104px; width:26px; height:16px; border-radius:50%;
+    background: radial-gradient(circle, rgba(255,132,148,.78), rgba(255,132,148,0) 70%);
+    z-index:6;
+  }
+  .cheek.left{ left:30px; }
+  .cheek.right{ right:30px; }
+  .mouth{
+    position:absolute; left:50%; top:114px; width:22px; height:11px;
+    margin-left:-11px; border-bottom:3px solid #1c2b22; border-radius:50%; z-index:6;
+  }
+  .arm{
+    position:absolute; top:100px; width:11px; height:58px; border-radius:999px;
+    background: linear-gradient(180deg,#7ed689,#2f8b47); transform-origin:top center; z-index:1;
+  }
+  .arm.left{ left:-2px; transform:rotate(26deg); }
+  .arm.right{ right:-2px; transform:rotate(-26deg); }
+  .arm.right.waving{ animation:wave .55s ease-in-out 3; }
+  @keyframes wave{
+    0%,100%{ transform:rotate(-26deg); }
+    20%{ transform:rotate(-74deg); }
+    45%{ transform:rotate(-12deg); }
+    70%{ transform:rotate(-68deg); }
+  }
+  .leg{
+    position:absolute; top:160px; width:14px; height:44px; border-radius:999px;
+    background: linear-gradient(180deg,#58c268,#2b8043); z-index:1;
+  }
+  .leg.left{ left:64px; }
+  .leg.right{ right:64px; }
+  .shoe{
+    position:absolute; left:50%; bottom:-6px; width:34px; height:18px;
+    margin-left:-17px; border-radius:17px 17px 9px 9px;
+    background: linear-gradient(180deg,#5a6b76,#2b3840);
+    box-shadow: inset 0 2px 2px rgba(255,255,255,.3), 0 4px 9px rgba(20,50,35,.35);
+  }
+  .shoe:after{
+    content:''; position:absolute; left:1px; right:1px; bottom:-3px;
+    height:5px; border-radius:0 0 6px 6px; background:#f4f8f5;
+  }
+  .hint{ margin-top:18px; font-size:12px; letter-spacing:2px; color:#4c8a67; }
+  .hud{
+    margin-top:10px; padding:7px 18px; font-size:13px; color:#2c6b45;
+    background:rgba(255,255,255,.65); border-radius:999px;
+  }
+  .hud b{ color:#1f8a4c; font-size:16px; }
+  .particle{
+    position:fixed; z-index:999; pointer-events:none;
+    animation:fly 1.1s ease-out forwards;
+  }
+  @keyframes fly{
+    0%{ opacity:0; transform:translate(-50%,-50%) scale(.4); }
+    15%{ opacity:1; }
+    100%{ opacity:0; transform:translate(calc(-50% + var(--tx)), calc(-50% + var(--ty))) scale(1.15); }
+  }
+</style>
+</head>
+<body>
+<div class="stage">
+  <div class="pet-area">
+    <div class="bubble" id="bubble">你好呀～</div>
+    <div class="pet" id="pet">
+      <div class="shadow"></div>
+      <div class="pet-inner">
+        <div class="pet-body" id="petBody">
+          <div class="arm left"></div>
+          <div class="arm right" id="armRight"></div>
+          <div class="leg left"><div class="shoe"></div></div>
+          <div class="leg right"><div class="shoe"></div></div>
+          <div class="fluff"></div>
+          <div class="shine"></div>
+          <div class="eye left"><span class="glint"></span></div>
+          <div class="eye right"><span class="glint"></span></div>
+          <div class="cheek left"></div>
+          <div class="cheek right"></div>
+          <div class="mouth"></div>
+        </div>
+      </div>
+    </div>
+  </div>
+  <div class="hint">点 我 一 下 · 一 起 减 碳</div>
+  <div class="hud">🌍 已减碳 <b id="count">0</b> g</div>
+</div>
+<script>
+  var petEl = document.getElementById('pet');
+  var bodyEl = document.getElementById('petBody');
+  var bubbleEl = document.getElementById('bubble');
+  var countEl = document.getElementById('count');
+  var armRight = document.getElementById('armRight');
+  var glints = document.querySelectorAll('.glint');
+  var LINES = [
+    '我是碳小绒，专门帮你减碳～',
+    '少开一天车，等于种下一棵树 🌳',
+    '空调调高 1℃，地球凉快一点点 ☀️',
+    '随手关灯，我就会偷偷开心 ✨',
+    '自带水杯，就少一个塑料瓶 💧',
+    '今天走路了吗？我陪你一起 🚶',
+    '省下的每一度电，都是我的小零食 ⚡',
+    '垃圾分类，我有在认真看哦 👀',
+    '谢谢你陪我，地球也谢谢你 🌍',
+    '最好的碳，是没排出来的碳 🌱'
+  ];
+  var carbon = 0;
+  var bubbleTimer = null;
+  var jumpTimer = null;
+  var waveTimer = null;
+  function say(text, ms){
+    ms = ms || 2800;
+    bubbleEl.textContent = text;
+    bubbleEl.classList.add('show');
+    clearTimeout(bubbleTimer);
+    bubbleTimer = setTimeout(function(){ bubbleEl.classList.remove('show'); }, ms);
+  }
+  function randomLine(){
+    return LINES[Math.floor(Math.random() * LINES.length)];
+  }
+  function jump(){
+    bodyEl.classList.remove('jump');
+    void bodyEl.offsetWidth;
+    bodyEl.classList.add('jump');
+    clearTimeout(jumpTimer);
+    jumpTimer = setTimeout(function(){ bodyEl.classList.remove('jump'); }, 720);
+  }
+  function wave(){
+    armRight.classList.remove('waving');
+    void armRight.offsetWidth;
+    armRight.classList.add('waving');
+    clearTimeout(waveTimer);
+    waveTimer = setTimeout(function(){ armRight.classList.remove('waving'); }, 1750);
+  }
+  var ICONS = ['🍃','💚','✨','🌱','♻️','🫧'];
+  function burst(x, y){
+    for (var i = 0; i < 8; i++){
+      var p = document.createElement('span');
+      p.className = 'particle';
+      p.textContent = ICONS[Math.floor(Math.random() * ICONS.length)];
+      p.style.left = x + 'px';
+      p.style.top = y + 'px';
+      p.style.fontSize = (14 + Math.random() * 12) + 'px';
+      var angle = -Math.PI/2 + (Math.random() - 0.5) * Math.PI * 1.5;
+      var dist = 60 + Math.random() * 95;
+      p.style.setProperty('--tx', Math.cos(angle) * dist + 'px');
+      p.style.setProperty('--ty', Math.sin(angle) * dist + 'px');
+      document.body.appendChild(p);
+      setTimeout(function(el){ return function(){ el.remove(); }; }(p), 1500);
+    }
+  }
+  petEl.addEventListener('click', function(e){
+    jump(); wave();
+    carbon++;
+    countEl.textContent = carbon;
+    say(randomLine(), 2600);
+    burst(e.clientX || window.innerWidth/2, e.clientY || window.innerHeight/2);
+  });
+  // 鼠标跟随
+  var targetX = 0, targetY = 0, curX = 0, curY = 0;
+  function clamp(v, a, b){ return Math.max(a, Math.min(b, v)); }
+  document.addEventListener('mousemove', function(e){
+    var r = petEl.getBoundingClientRect();
+    var cx = r.left + r.width/2;
+    var cy = r.top + r.height/2;
+    targetX = clamp((e.clientX - cx) / 260, -1, 1);
+    targetY = clamp((e.clientY - cy) / 260, -1, 1);
+  });
+  function raf(){
+    curX += (targetX - curX) * 0.09;
+    curY += (targetY - curY) * 0.09;
+    petEl.style.transform = 'translate3d(' + (curX*12) + 'px,' + (curY*9) + 'px,0) rotate(' + (curX*4) + 'deg)';
+    for (var i = 0; i < glints.length; i++){
+      glints[i].style.transform = 'translate(' + (curX*5) + 'px,' + (curY*5) + 'px)';
+    }
+    requestAnimationFrame(raf);
+  }
+  raf();
+  // 眨眼
+  var eyes = document.querySelectorAll('.eye');
+  function blink(){
+    for (var i = 0; i < eyes.length; i++) eyes[i].classList.add('blink');
+    setTimeout(function(){
+      for (var i = 0; i < eyes.length; i++) eyes[i].classList.remove('blink');
+    }, 150);
+  }
+  (function loop(){
+    setTimeout(function(){ blink(); loop(); }, 1800 + Math.random()*3200);
+  })();
+  // 键盘
+  document.addEventListener('keydown', function(e){
+    if (e.code === 'Space' || e.code === 'Enter'){
+      e.preventDefault();
+      jump(); wave();
+      carbon++;
+      countEl.textContent = carbon;
+      say(randomLine(), 2600);
+      var r = petEl.getBoundingClientRect();
+      burst(r.left + r.width/2, r.top + r.height/2);
+    }
+  });
+  // 空闲自言自语
+  setInterval(function(){
+    if (!bubbleEl.classList.contains('show')) say(randomLine(), 3200);
+  }, 11000);
+  window.addEventListener('load', function(){
+    setTimeout(function(){ say('你好呀！我是碳小绒 🌱', 3400); }, 600);
+  });
+</script>
+</body>
+</html>

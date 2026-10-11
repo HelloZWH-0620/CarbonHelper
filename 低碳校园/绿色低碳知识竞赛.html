@@ -1,0 +1,262 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>绿色低碳知识竞赛</title>
+<style>
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+  body { font-family: "Segoe UI", "Microsoft YaHei", sans-serif; background: #f5f7f6; color: #303133; padding: 24px 12px; }
+  .card { max-width: 860px; margin: 0 auto; background: #fff; border-radius: 10px; box-shadow: 0 2px 12px rgba(0,0,0,.06); padding: 24px; }
+  .head { display: flex; align-items: center; justify-content: space-between; margin-bottom: 18px; }
+  .title { font-size: 18px; font-weight: bold; }
+  .tag { display: inline-block; padding: 2px 10px; border: 1px solid #2e7d32; color: #2e7d32; border-radius: 4px; font-size: 12px; background: #f0f9eb; }
+  .tag.plain { border-color: #d9ecff; color: #409eff; background: #ecf5ff; }
+  .intro { text-align: center; }
+  .intro-icon { font-size: 56px; margin-bottom: 14px; }
+  table.rules { width: 100%; border-collapse: collapse; margin-bottom: 16px; }
+  table.rules td, table.rules th { border: 1px solid #ebeef5; padding: 10px 12px; font-size: 14px; text-align: left; }
+  table.rules td:first-child { background: #fafafa; color: #909399; width: 110px; }
+  .tip { color: #909399; font-size: 13px; margin: 14px 0 22px; line-height: 1.7; }
+  .btn { display: inline-block; background: #2e7d32; color: #fff; border: none; border-radius: 6px; padding: 12px 34px; font-size: 16px; cursor: pointer; transition: background .15s; }
+  .btn:hover { background: #27672b; }
+  .btn.plain { background: #fff; color: #2e7d32; border: 1px solid #2e7d32; }
+  .btn.plain:hover { background: #f0f9eb; }
+  .btn:disabled { background: #a5c8a7; cursor: not-allowed; }
+  .topbar { display: flex; align-items: center; justify-content: space-between; margin-bottom: 12px; flex-wrap: wrap; gap: 8px; }
+  .total-timer { background: #2e7d32; color: #fff; border-radius: 6px; padding: 6px 14px; font-size: 15px; font-variant-numeric: tabular-nums; }
+  .total-timer.danger { background: #f56c6c; }
+  .progress-text { font-weight: bold; }
+  .q-timer { color: #2e7d32; font-variant-numeric: tabular-nums; }
+  .q-timer.danger { color: #f56c6c; font-weight: bold; }
+  .bar { height: 8px; background: #ebeef5; border-radius: 4px; overflow: hidden; margin-bottom: 20px; }
+  .bar i { display: block; height: 100%; background: #2e7d32; transition: width .25s linear; }
+  .bar i.danger { background: #f56c6c; }
+  .cat { display: inline-block; padding: 1px 8px; border: 1px solid #e4e7ed; border-radius: 3px; font-size: 12px; color: #909399; }
+  .q-text { margin: 12px 0 20px; font-size: 18px; }
+  .options { display: flex; flex-direction: column; gap: 12px; }
+  .option { display: flex; align-items: center; gap: 12px; padding: 14px 16px; border: 1px solid #e4e7ed; border-radius: 8px; cursor: pointer; transition: all .15s; font-size: 15px; }
+  .option:hover { border-color: #2e7d32; background: #f0f9eb; }
+  .option.picked { border-color: #2e7d32; background: #e1f3d8; }
+  .letter { display: inline-flex; align-items: center; justify-content: center; width: 26px; height: 26px; border-radius: 50%; background: #2e7d32; color: #fff; font-size: 13px; flex-shrink: 0; }
+  .hint { text-align: center; color: #c0c4cc; font-size: 12px; margin-top: 18px; }
+  .result-head { text-align: center; padding: 8px 0 4px; }
+  .score { font-size: 32px; font-weight: bold; color: #2e7d32; }
+  .score.expired { color: #f56c6c; }
+  .points { color: #606266; margin: 10px 0 16px; }
+  .review { padding: 14px 0; border-bottom: 1px solid #ebeef5; }
+  .review:last-child { border-bottom: none; }
+  .review-head { display: flex; align-items: center; gap: 8px; margin-bottom: 8px; flex-wrap: wrap; }
+  .r-tag { padding: 1px 8px; border-radius: 3px; font-size: 12px; color: #fff; }
+  .r-tag.ok { background: #2e7d32; }
+  .r-tag.bad { background: #f56c6c; }
+  .review-cat { color: #909399; font-size: 12px; }
+  .review-q { font-weight: bold; font-size: 14px; }
+  .review-body { color: #606266; font-size: 14px; line-height: 1.9; padding-left: 4px; }
+  .right { color: #2e7d32; font-weight: bold; }
+  .wrong { color: #f56c6c; font-weight: bold; }
+  .explain { color: #909399; }
+  .foot { text-align: center; color: #c0c4cc; font-size: 12px; margin-top: 14px; }
+  .foot a { color: #2e7d32; cursor: pointer; }
+  .summary-alert { background: #ecf5ff; border: 1px solid #d9ecff; color: #409eff; border-radius: 4px; padding: 8px 14px; font-size: 13px; margin-top: 14px; text-align: center; }
+</style>
+</head>
+<body>
+<div id="app"></div>
+<script>
+const QUESTIONS = [{"category": "双碳政策", "question": "我国提出力争在何时实现碳达峰？", "options": ["2025年", "2030年", "2035年", "2050年"], "answer": 1, "explanation": "碳达峰指碳排放达到峰值后不再增长，我国承诺2030年前实现。"}, {"category": "双碳政策", "question": "我国提出力争在何时实现碳中和？", "options": ["2030年", "2040年", "2050年", "2060年"], "answer": 3, "explanation": "碳中和指二氧化碳排放与吸收相抵消，我国承诺2060年前实现。"}, {"category": "双碳政策", "question": "\"双碳\"目标指的是？", "options": ["碳减排和碳交易", "碳达峰和碳中和", "碳税和碳配额", "碳捕集和碳封存"], "answer": 1, "explanation": "\"双碳\"即碳达峰与碳中和。"}, {"category": "双碳政策", "question": "温室气体中占比最大的是？", "options": ["甲烷", "二氧化碳", "氧化亚氮", "水蒸气"], "answer": 1, "explanation": "二氧化碳是人为温室气体排放的主要成分。"}, {"category": "双碳政策", "question": "《巴黎协定》提出将全球升温控制在？", "options": ["1°C内", "2°C内", "3°C内", "4°C内"], "answer": 1, "explanation": "协定目标为2°C以内，并力争控制在1.5°C。"}, {"category": "双碳政策", "question": "碳足迹是指？", "options": ["走路留下的脚印", "活动或产品全生命周期产生的温室气体总量", "汽车尾气", "碳交易金额"], "answer": 1, "explanation": "碳足迹核算从生产到废弃全过程的碳排放。"}, {"category": "双碳政策", "question": "下列哪种行为属于\"碳抵消\"？", "options": ["少开一天车", "植树造林吸收二氧化碳", "使用节能灯", "自带水杯"], "answer": 1, "explanation": "植树造林通过光合作用吸收CO₂，可抵消部分排放。"}, {"category": "双碳政策", "question": "碳交易市场交易的对象是？", "options": ["电力", "碳排放配额", "石油", "天然气"], "answer": 1, "explanation": "碳市场买卖的是经核证的碳排放配额。"}, {"category": "可再生能源", "question": "太阳能发电主要利用的是？", "options": ["光电效应", "电磁感应", "热胀冷缩", "重力势能"], "answer": 0, "explanation": "光伏电池利用光电效应将光能转化为电能。"}, {"category": "可再生能源", "question": "我国装机容量居世界第一的可再生能源是？", "options": ["太阳能光伏", "潮汐能", "地热能", "生物质能"], "answer": 0, "explanation": "我国光伏装机规模全球领先。"}, {"category": "可再生能源", "question": "按照本项目碳因子，每使用1度电约排放多少千克二氧化碳？", "options": ["0.057", "0.57", "5.7", "57"], "answer": 1, "explanation": "项目默认电力因子为0.5703kg CO₂/kWh。"}, {"category": "可再生能源", "question": "LED灯比传统白炽灯大约省电多少？", "options": ["20%", "40%", "60%", "80%"], "answer": 3, "explanation": "LED光效高，可节省约80%照明用电。"}, {"category": "可再生能源", "question": "夏季空调制冷温度建议设置为？", "options": ["22°C", "24°C", "26°C", "28°C"], "answer": 2, "explanation": "26°C兼顾舒适与节能，每调高1°C约省电7%-10%。"}, {"category": "可再生能源", "question": "电器处于待机状态时？", "options": ["不耗电", "耗电很少可忽略", "仍会耗电，约占家庭用电5%-10%", "完全断电"], "answer": 2, "explanation": "待机功耗累计可观，随手拔插头更省电。"}, {"category": "可再生能源", "question": "能效等级标识中，最节能的等级是？", "options": ["1级", "2级", "3级", "5级"], "answer": 0, "explanation": "能效等级数字越小越节能。"}, {"category": "可再生能源", "question": "\"谷电\"时段用电相比高峰时段？", "options": ["更贵", "更便宜且更低碳", "完全一样", "更污染"], "answer": 1, "explanation": "谷电电价低，且电网发电结构更清洁。"}, {"category": "低碳生活", "question": "\"光盘行动\"的核心意义是？", "options": ["减少餐厨浪费及其碳足迹", "省钱", "提升食欲", "减少排队"], "answer": 0, "explanation": "减少食物浪费即减少全链条碳排放。"}, {"category": "低碳生活", "question": "骑行1公里与开燃油车1公里相比碳排放？", "options": ["更高", "更低", "相同", "无法比较"], "answer": 1, "explanation": "骑行零排放，是典型绿色出行。"}, {"category": "低碳生活", "question": "使用一次性塑料餐具的危害是？", "options": ["生产耗能且难降解", "更卫生", "更便宜", "没有危害"], "answer": 0, "explanation": "一次性塑料生产消耗石油且降解需数百年。"}, {"category": "低碳生活", "question": "自带水杯相比购买瓶装水？", "options": ["更不环保", "可减少塑料瓶消耗与运输碳排放", "没有区别", "水质更差"], "answer": 1, "explanation": "减少塑料瓶生产与运输是低碳习惯。"}, {"category": "低碳生活", "question": "打印资料时应？", "options": ["单面打印", "双面打印并尽量电子化", "大量彩印", "打印后丢弃"], "answer": 1, "explanation": "双面打印与无纸化减少纸张消耗与碳排放。"}, {"category": "低碳生活", "question": "教室没人时正确做法是？", "options": ["灯照常亮", "人走灯灭、关闭空调", "开着门通风即可", "无所谓"], "answer": 1, "explanation": "随手关灯关空调是校园最基本节能行为。"}, {"category": "低碳生活", "question": "下列哪个出行方式碳排放最低？", "options": ["燃油汽车", "电动车", "步行或骑行", "摩托车"], "answer": 2, "explanation": "步行骑行零排放。"}, {"category": "低碳生活", "question": "外卖点餐时更低碳的选择是？", "options": ["多要一次性餐具", "选择\"无需餐具\"", "多点浪费", "打包袋越多越好"], "answer": 1, "explanation": "减少一次性餐具使用。"}, {"category": "垃圾分类", "question": "我国生活垃圾一般分为几类？", "options": ["两类", "三类", "四类", "五类"], "answer": 2, "explanation": "可回收物、有害垃圾、厨余垃圾、其他垃圾。"}, {"category": "垃圾分类", "question": "废电池应投入？", "options": ["可回收物", "有害垃圾", "厨余垃圾", "其他垃圾"], "answer": 1, "explanation": "电池含重金属，属有害垃圾。"}, {"category": "垃圾分类", "question": "塑料饮料瓶属于？", "options": ["有害垃圾", "厨余垃圾", "可回收物", "其他垃圾"], "answer": 2, "explanation": "塑料瓶可回收再生。"}, {"category": "垃圾分类", "question": "剩饭剩菜属于？", "options": ["可回收物", "有害垃圾", "厨余垃圾", "其他垃圾"], "answer": 2, "explanation": "餐厨废弃物为厨余垃圾。"}, {"category": "垃圾分类", "question": "回收1吨废纸大约可再造多少好纸？", "options": ["0.2吨", "0.5吨", "0.8吨", "1.2吨"], "answer": 2, "explanation": "约可再生成0.8吨纸，减少木材消耗。"}, {"category": "垃圾分类", "question": "塑料制品在自然环境中完全降解约需？", "options": ["几年", "十几年", "数十年", "数百年"], "answer": 3, "explanation": "普通塑料降解周期可达数百年。"}, {"category": "垃圾分类", "question": "垃圾焚烧发电属于？", "options": ["资源化利用", "单纯污染", "违规处理", "填埋替代的唯一方式"], "answer": 0, "explanation": "焚烧发电实现垃圾减量与能源回收。"}, {"category": "垃圾分类", "question": "下列哪项不是可回收物？", "options": ["易拉罐", "旧报纸", "废灯管", "旧衣服（部分可回收）"], "answer": 2, "explanation": "废灯管含汞，属有害垃圾。"}, {"category": "气候变化与生态", "question": "温室效应的主要原因是？", "options": ["太阳变热", "大气中温室气体增多", "月亮引力", "地球自转"], "answer": 1, "explanation": "温室气体拦截地表辐射导致升温。"}, {"category": "气候变化与生态", "question": "工业革命以来全球平均气温大约上升了？", "options": ["0.1°C", "0.5°C", "约1°C", "约5°C"], "answer": 2, "explanation": "IPCC数据约1.1°C。"}, {"category": "气候变化与生态", "question": "被称为\"地球之肺\"的是？", "options": ["海洋", "森林", "沙漠", "冰川"], "answer": 1, "explanation": "森林吸收CO₂释放氧气。"}, {"category": "气候变化与生态", "question": "被称为\"地球之肾\"的是？", "options": ["森林", "湿地", "草原", "农田"], "answer": 1, "explanation": "湿地净化水质、调节气候。"}, {"category": "气候变化与生态", "question": "按本项目碳因子，一棵树一年约可吸收多少千克二氧化碳？", "options": ["1.83", "18.3", "183", "1830"], "answer": 1, "explanation": "项目默认折合18.3kg/棵·年。"}, {"category": "气候变化与生态", "question": "海平面上升的主要原因是？", "options": ["地球膨胀", "冰川融化与海水热膨胀", "降雨增多", "地壳运动"], "answer": 1, "explanation": "气候变暖导致极地冰川融化与海水膨胀。"}, {"category": "气候变化与生态", "question": "下列哪项不属于温室气体？", "options": ["二氧化碳", "甲烷", "氧气", "氧化亚氮"], "answer": 2, "explanation": "氧气不是温室气体。"}, {"category": "气候变化与生态", "question": "应对气候变化最根本的措施是？", "options": ["减排与增汇并举", "只植树", "只关停工厂", "等气温自然下降"], "answer": 0, "explanation": "源头减排与增加碳汇结合。"}];
+
+const PER_Q = 30, TOTAL = 300, LETTERS = ["A", "B", "C", "D"];
+const today = () => new Date().toISOString().slice(0, 10);
+const store = {
+  get() { try { return JSON.parse(localStorage.getItem("quizDemoAttempt") || "null"); } catch (e) { return null; } },
+  set(v) { localStorage.setItem("quizDemoAttempt", JSON.stringify(v)); },
+  clear() { localStorage.removeItem("quizDemoAttempt"); },
+};
+const esc = (s) => String(s).replace(/&/g, "&amp;").replace(/</g, "&lt;").replace(/>/g, "&gt;").replace(/"/g, "&quot;");
+
+let qs = [], answers = [], cur = 0, totalLeft = TOTAL, qLeft = PER_Q;
+let totalTimer = null, qTimer = null, advancing = false;
+
+const app = document.getElementById("app");
+const fmt = (s) => `${String(Math.floor(Math.max(0, s) / 60)).padStart(2, "0")}:${String(Math.max(0, s) % 60).padStart(2, "0")}`;
+
+function shuffle(arr) { const a = arr.slice(); for (let i = a.length - 1; i > 0; i--) { const j = Math.floor(Math.random() * (i + 1)); [a[i], a[j]] = [a[j], a[i]]; } return a; }
+
+/* ---------- 开始页 ---------- */
+function renderIntro(done) {
+  stopTimers();
+  const rec = done || store.get();
+  app.innerHTML = `
+    <div class="card">
+      <div class="head"><span class="title">📝 绿色低碳知识竞赛</span><span class="tag">每日限 1 次</span></div>
+      <div class="intro">
+        <div class="intro-icon">🌱</div>
+        <table class="rules">
+          <tr><td>题目数量</td><td>每轮随机抽 10 题（题库共 ${QUESTIONS.length} 题，5 大分类，不重复）</td></tr>
+          <tr><td>答题时间</td><td>每题限时 30 秒，总限时 5 分钟</td></tr>
+          <tr><td>积分规则</td><td>答对 1 题 +2 积分，答错不扣分</td></tr>
+          <tr><td>积分上限</td><td>一轮最多 +20 积分</td></tr>
+        </table>
+        <p class="tip">题目与选项顺序均为随机排列；点击选项后自动进入下一题，超时未答按跳过处理；<br>交卷后立即显示得分与每题答案解析。</p>
+        ${rec ? `<p class="tip">今日已参与：答对 <b>${rec.correct}</b>/10，积分 <b>+${rec.points}</b>${rec.status === "expired" ? "（超时未计分）" : ""}</p>
+                 <button class="btn plain" id="viewResult">查看成绩摘要</button>
+                 <span style="display:inline-block;width:12px"></span>
+                 <button class="btn" disabled>已参与</button>
+                 <p class="foot">演示数据保存在本机浏览器 · <a id="resetDemo">重置今日记录（演示用）</a></p>`
+               : `<button class="btn" id="startBtn">开始答题</button>`}
+      </div>
+    </div>`;
+  const sb = document.getElementById("startBtn");
+  if (sb) sb.onclick = begin;
+  const vb = document.getElementById("viewResult");
+  if (vb) vb.onclick = () => renderResult(summary(rec), true);
+  const rd = document.getElementById("resetDemo");
+  if (rd) rd.onclick = () => { store.clear(); renderIntro({}); };
+}
+
+function summary(rec) {
+  return { status: rec.status, correct: rec.correct, points: rec.points, detail: null };
+}
+
+/* ---------- 答题页 ---------- */
+function begin() {
+  const picked = shuffle(QUESTIONS).slice(0, 10);
+  qs = picked.map((q) => {
+    const perm = shuffle([0, 1, 2, 3]); // perm[展示位] = 原始下标
+    return { category: q.category, question: q.question, options: perm.map((d) => q.options[d]), correctDisplay: perm.indexOf(q.answer), explanation: q.explanation };
+  });
+  answers = qs.map(() => null);
+  cur = 0; totalLeft = TOTAL; advancing = false;
+  renderQuestion();
+  startTimers();
+}
+
+function startTimers() {
+  stopTimers();
+  let d1 = Date.now() + totalLeft * 1000;
+  totalTimer = setInterval(() => {
+    totalLeft = Math.round((d1 - Date.now()) / 1000);
+    updateTimers();
+    if (totalLeft <= 0) submit();
+  }, 250);
+  restartQTimer();
+}
+
+function restartQTimer() {
+  clearInterval(qTimer);
+  qLeft = PER_Q;
+  let d2 = Date.now() + PER_Q * 1000;
+  qTimer = setInterval(() => {
+    qLeft = Math.round((d2 - Date.now()) / 1000);
+    updateTimers();
+    if (qLeft <= 0) advance(null);
+  }, 250);
+}
+
+function stopTimers() { clearInterval(totalTimer); clearInterval(qTimer); totalTimer = qTimer = null; }
+
+function updateTimers() {
+  const tt = document.querySelector(".total-timer"), qt = document.querySelector(".q-timer"), bar = document.querySelector(".bar i");
+  if (!tt) return;
+  tt.textContent = `⏱ 总剩余 ${fmt(totalLeft)}`;
+  tt.classList.toggle("danger", totalLeft <= 30);
+  if (qt) { qt.textContent = `本题 ${Math.max(0, qLeft)}s`; qt.classList.toggle("danger", qLeft <= 5); }
+  if (bar) { bar.style.width = Math.max(0, qLeft) / PER_Q * 100 + "%"; bar.classList.toggle("danger", qLeft <= 5); }
+}
+
+function renderQuestion() {
+  const q = qs[cur];
+  app.innerHTML = `
+    <div class="card">
+      <div class="topbar">
+        <span class="total-timer">⏱ 总剩余 ${fmt(totalLeft)}</span>
+        <span class="progress-text">第 ${cur + 1} / ${qs.length} 题</span>
+        <span class="q-timer">本题 ${qLeft}s</span>
+      </div>
+      <div class="bar"><i style="width:100%"></i></div>
+      <div>
+        <span class="cat">${esc(q.category)}</span>
+        <h3 class="q-text">${cur + 1}. ${esc(q.question)}</h3>
+        <div class="options">
+          ${q.options.map((o, i) => `
+            <div class="option" role="button" data-i="${i}">
+              <span class="letter">${LETTERS[i]}</span><span>${esc(o)}</span>
+            </div>`).join("")}
+        </div>
+        <p class="hint">点击选项即自动进入下一题</p>
+      </div>
+    </div>`;
+  app.querySelectorAll(".option").forEach((el) => {
+    el.onclick = () => pick(Number(el.dataset.i));
+  });
+  updateTimers();
+}
+
+function pick(i) {
+  if (advancing) return;
+  answers[cur] = i;
+  advance(i);
+}
+
+function advance(idx) {
+  if (advancing) return;
+  advancing = true;
+  answers[cur] = answers[cur] ?? idx;
+  if (cur + 1 >= qs.length) { submit(); return; }
+  setTimeout(() => { cur += 1; renderQuestion(); advancing = false; }, 350);
+}
+
+/* ---------- 提交与结果页 ---------- */
+function submit() {
+  if (document.getElementById("resultCard")) return;
+  stopTimers();
+  let correct = 0;
+  const detail = qs.map((q, i) => {
+    const my = answers[i];
+    const ok = my !== null && my === q.correctDisplay;
+    if (ok) correct += 1;
+    return { ...q, my, ok };
+  });
+  const points = correct * 2;
+  const rec = { date: today(), correct, points, status: "finished" };
+  store.set(rec);
+  renderResult({ status: "finished", correct, points, detail }, false);
+}
+
+function renderResult(r, summaryOnly) {
+  stopTimers();
+  app.innerHTML = `
+    <div class="card" id="resultCard">
+      <div class="head"><span class="title">📝 答题结果</span><span class="tag">每日限 1 次</span></div>
+      <div class="result-head">
+        <div class="score ${r.status === "expired" ? "expired" : ""}">${r.status === "expired" ? "已超时" : `答对 ${r.correct} / 10`}</div>
+        <div class="points">${r.status === "expired" ? "本轮未在限时内交卷，积分不计入" : `积分入账 +${r.points}`}</div>
+        <button class="btn plain" id="backBtn">返回首页</button>
+      </div>
+      ${summaryOnly ? `<div class="summary-alert">解析仅在交卷时展示一次，以上为成绩摘要 · <a id="resetDemo2" style="cursor:pointer">重置今日记录（演示用）</a></div>`
+        : `<div style="margin-top:10px"><h3 style="font-size:16px;margin:14px 0 4px">每题答案解析</h3>
+            ${r.detail.map((d, i) => `
+              <div class="review">
+                <div class="review-head">
+                  <span class="r-tag ${d.ok ? "ok" : "bad"}">${d.ok ? "✓ 答对" : "✗ 答错"}</span>
+                  <span class="review-cat">${esc(d.category)}</span>
+                  <span class="review-q">${i + 1}. ${esc(d.question)}</span>
+                </div>
+                <div class="review-body">
+                  <div>你的答案：<span class="${d.ok ? "right" : "wrong"}">${d.my === null ? "未作答" : esc(d.options[d.my])}</span></div>
+                  ${d.ok ? "" : `<div>正确答案：<span class="right">${esc(d.options[d.correctDisplay])}</span></div>`}
+                  <div class="explain">解析：${esc(d.explanation)}</div>
+                </div>
+              </div>`).join("")}
+          </div>`}
+    </div>`;
+  document.getElementById("backBtn").onclick = () => renderIntro();
+  const r2 = document.getElementById("resetDemo2");
+  if (r2) r2.onclick = () => { store.clear(); renderIntro({}); };
+}
+
+renderIntro();
+</script>
+</body>
+</html>

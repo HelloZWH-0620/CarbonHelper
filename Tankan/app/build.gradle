@@ -1,17 +1,18 @@
 plugins {
     id 'com.android.application'
+    id 'org.jetbrains.kotlin.plugin.compose'
 }
 
 android {
     namespace 'com.carbonhelper.tankan'
-    compileSdk 36
+    compileSdk 37
 
     defaultConfig {
         applicationId "com.carbonhelper.tankan"
         minSdk 31
-        targetSdk 36
-        versionCode 3
-        versionName "0.0.3"
+        targetSdk 37
+        versionCode 12
+        versionName "0.1.8"
     }
 
     signingConfigs {
@@ -34,4 +35,24 @@ android {
         sourceCompatibility JavaVersion.VERSION_17
         targetCompatibility JavaVersion.VERSION_17
     }
+
+    buildFeatures {
+        compose true
+    }
+}
+
+dependencies {
+    implementation 'androidx.core:core-ktx:1.15.0'
+    implementation 'androidx.appcompat:appcompat:1.7.0'
+
+    // Compose（用于液态玻璃控件覆盖层，覆盖在 WebView 之上）
+    implementation platform('androidx.compose:compose-bom:2026.09.00')
+    implementation 'androidx.compose.ui:ui'
+    implementation 'androidx.compose.foundation:foundation'
+    implementation 'androidx.compose.material3:material3'
+    implementation 'androidx.activity:activity-compose:1.13.0'
+
+    // AndroidLiquidGlass-2.0.1（KMP Compose Multiplatform 液态玻璃/镜片/毛玻璃）
+    implementation 'io.github.kyant0:backdrop:2.0.1'
+    implementation 'io.github.kyant0:shapes:1.2.1'
 }

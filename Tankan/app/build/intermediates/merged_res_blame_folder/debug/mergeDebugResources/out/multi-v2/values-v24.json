@@ -1,0 +1,19 @@
+{
+    "logs": [
+        {
+            "outputFile": "com.carbonhelper.tankan.app-mergeDebugResources-42:/values-v24/values-v24.xml",
+            "map": [
+                {
+                    "source": "C:\\Users\\13970\\.gradle\\caches\\9.5.0\\transforms\\334d992f5195ca622315b73e1c83d063\\transformed\\appcompat-1.7.0\\res\\values-v24\\values-v24.xml",
+                    "from": {
+                        "startLines": "2,3",
+                        "startColumns": "4,4",
+                        "startOffsets": "55,212",
+                        "endColumns": "156,134",
+                        "endOffsets": "207,342"
+                    }
+                }
+            ]
+        }
+    ]
+}

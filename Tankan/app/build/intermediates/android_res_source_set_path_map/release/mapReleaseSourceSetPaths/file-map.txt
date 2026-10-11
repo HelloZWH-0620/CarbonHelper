@@ -1,0 +1,8 @@
+com.carbonhelper.tankan.app-pngs-0 D:\Github\CarbonHelper\Tankan\app\build\generated\res\pngs\release
+com.carbonhelper.tankan.app-updated_navigation_xml-1 D:\Github\CarbonHelper\Tankan\app\build\generated\updated_navigation_xml\release
+com.carbonhelper.tankan.app-packageReleaseResources-2 D:\Github\CarbonHelper\Tankan\app\build\intermediates\incremental\release\packageReleaseResources\merged.dir
+com.carbonhelper.tankan.app-packageReleaseResources-3 D:\Github\CarbonHelper\Tankan\app\build\intermediates\incremental\release\packageReleaseResources\stripped.dir
+com.carbonhelper.tankan.app-release-4 D:\Github\CarbonHelper\Tankan\app\build\intermediates\merged_res\release\mergeReleaseResources
+com.carbonhelper.tankan.app-main-5 D:\Github\CarbonHelper\Tankan\app\src\main\res
+com.carbonhelper.tankan.app-release-6 D:\Github\CarbonHelper\Tankan\app\src\release\res
+gradleHome-0 C:\Users\13970\.gradle
