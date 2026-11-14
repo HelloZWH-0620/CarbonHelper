@@ -55,7 +55,7 @@
     },
     {
       catId: 'waterheater', emoji: '🚿',
-      name: '热水器', img: 'img/hotwater.png',
+      name: '热水器', img: 'img/waterheater.png',
       today: '20分钟', month: '4.2度', carbon: '2.4 KG',
       status: '待机', powerW: 0, voltage: 220, currentA: 10, location: '北宿2栋-406阳台', kwhToday: 0.7, runH: 0.4, standbyH: 2.1,
       slots: [0.1, 0.1, 0.5, 0.2, 0.2, 0.4, 1.9, 0.7],
@@ -314,71 +314,6 @@
       q: ['全宿舍都去上课时，路由器怎样最省电？', ['关闭插排或拔掉电源', '保持开机方便回来即用', '用毛巾盖住防尘'], 0, '无人使用的数小时里，断电省下的虽不多，但积少成多。']
     },
     {
-      id: 'humidifier', emoji: '💧', name: '加湿器', img: 'img/humidifier.png',
-      powerW: 30, a: 1, loc: '北宿2栋-406书桌', today: '4小时', kwh: 0.1, month: 1.2, run: 4, sb: 0.5, pat: 'day',
-      ai: ['整夜运行', '加湿器整夜开启，清晨桌面结露，说明加湿量已经明显过量。', '湿度目标设为 40-50%，使用恒湿模式并定时关闭', 0.04],
-      sim: [['每日使用', 1, 10, 0.5, '小时', 10, 'down', 0.3], ['目标湿度', 30, 70, 5, '%RH', 70, 'down', 0.2]],
-      acts: ['使用恒湿模式而非常开', '睡前定时 2 小时关闭', '每周换水刷洗水箱'],
-      tips: ['人体舒适湿度为 40%-60%，并非越高越好', '定期清洁水箱，避免细菌随水雾扩散', '使用纯净水或凉白开可减少白粉'],
-      q: ['冬季室内湿度保持在多少最舒适也最省电？', ['40%-60%', '越高越好，90% 最佳', '越干越好'], 0, '湿度过高不仅费电，还可能引起结露和霉菌。']
-    },
-    {
-      id: 'warmer', emoji: '🔥', name: '电暖器', img: 'img/warmer.png',
-      powerW: 1800, a: 16, loc: '北宿2栋-406', today: '3小时', kwh: 3.2, month: 18, run: 3, sb: 1, pat: 'night',
-      ai: ['23:00 - 次日 02:00', '深夜睡眠时电暖器仍满功率运行，它是宿舍里功率最大的用电设备。', '睡前提前暖房，入睡后切低温档或定时关闭', 0.8],
-      sim: [['每日使用', 1, 8, 0.5, '小时', 8, 'down', 0.35], ['温度档位', 1, 3, 1, '档', 3, 'down', 0.3]],
-      acts: ['入睡后调低档位', '先关好门窗再开暖器', '周围不堆放衣物书本'],
-      tips: ['电暖器每多用 1 小时约多耗 1.8 度电', '关严门窗升温更快更省电', '严禁在电暖器上覆盖衣物烘烤'],
-      q: ['宿舍里功率通常最大、最需要控制时长的电器是？', ['电暖器', '路由器', '手机充电器'], 0, '电暖器功率可达 1800W 以上，是宿舍冬季的用电大户。']
-    },
-    {
-      id: 'robot', emoji: '🤖', name: '扫地机器人', img: 'img/robot.png',
-      powerW: 30, a: 1, loc: '北宿2栋-406地面', today: '20分钟', kwh: 0.05, month: 0.9, run: 0.33, sb: 2.2, pat: 'brief',
-      status: '待机',
-      ai: ['基座全天通电', '清扫完成后充电基座长时间空载通电，待机功耗积少成多。', '每周定时清扫 2-3 次，充满电后断开基座电源', 0.03],
-      sim: [['每周清扫', 1, 7, 1, '次', 7, 'down', 0.25], ['清扫范围', 30, 100, 10, '%', 100, 'down', 0.2]],
-      acts: ['充满电后断开基座', '定期清理滚刷毛发', '清扫前收拢地面杂物'],
-      tips: ['满电后继续插着会持续消耗待机电量', '清理滚刷和滤网能减小运行阻力', '先收纳线缆再清扫可提高效率'],
-      q: ['扫地机器人清扫前先整理地面线缆杂物，可以？', ['提高清扫效率更省电', '完全没有影响', '反而更费电'], 0, '减少绕障和重复路径，同样电量覆盖更多面积。']
-    },
-    {
-      id: 'projector', emoji: '📽️', name: '投影仪', img: 'img/projector.png',
-      powerW: 150, a: 3, loc: '北宿2栋-406白墙', today: '2小时', kwh: 0.3, month: 4.5, run: 2, sb: 1.5, pat: 'night',
-      ai: ['22:00 之后', '深夜连续观影超过 3 小时，高亮度模式持续耗电。', '开启节能模式，看一集休息一会儿，避免睡着后空放', 0.12],
-      sim: [['每周观影', 2, 10, 1, '次', 10, 'down', 0.3], ['亮度档位', 1, 3, 1, '档', 3, 'down', 0.2]],
-      acts: ['使用节能亮度模式', '不用时彻底关机断电', '每月清洁进风滤网'],
-      tips: ['亮度调低一档画面依旧清晰且更省电', '拉好窗帘遮光可降低对亮度的需求', '投影仪待机功耗不低，看完记得断电'],
-      q: ['白天用投影仪看电影，怎样做更省电？', ['拉上窗帘遮光并降低亮度档', '把亮度开到最大', '开着灯同时投影'], 0, '环境光越暗，需要的投影亮度越低，耗电也越少。']
-    },
-    {
-      id: 'purifier', emoji: '🌿', name: '空气净化器', img: 'img/purifier.png',
-      powerW: 45, a: 1, loc: '北宿2栋-406', today: '6小时', kwh: 0.16, month: 2.4, run: 6, sb: 1, pat: 'flat',
-      ai: ['全天最高档', '空气质量良好时净化器仍全天最高档运行，风机持续高速耗电。', '使用自动模式，让机器按空气质量调节风量', 0.07],
-      sim: [['每日开启', 2, 24, 1, '小时', 24, 'down', 0.3], ['风量档位', 1, 3, 1, '档', 3, 'down', 0.25]],
-      acts: ['使用自动风量模式', '开窗通风时关闭净化器', '每两周清洗一次滤网'],
-      tips: ['自动模式比固定最高档省电约 50%', '开窗时关闭，避免净化室外空气做无用功', '滤网堵塞会让风机耗电大增'],
-      q: ['空气净化器最省电的使用方式是？', ['开启自动模式随空气质量调档', '24 小时开最大档', '开窗通风时也一直开着'], 0, '自动模式在空气达标时自动降档，兼顾效果与耗电。']
-    },
-    {
-      id: 'dispenser', emoji: '🚰', name: '饮水机', img: 'img/dispenser.png',
-      powerW: 420, a: 3, loc: '北宿2栋-406', today: '保温全天', kwh: 0.7, month: 8.5, run: 1.2, sb: 8, pat: 'flat',
-      status: '保温中',
-      ai: ['夜间反复加热', '夜间无人接水时仍反复加热保温，一天中保温耗电占比超过一半。', '睡前关闭加热开关，需要热水时提前 5 分钟开启', 0.25],
-      sim: [['每日保温', 1, 24, 1, '小时', 24, 'down', 0.4], ['保温水温', 75, 95, 1, '℃', 95, 'down', 0.2]],
-      acts: ['睡前关闭加热开关', '长假离校前断开电源', '每月清洗内胆除垢'],
-      tips: ['反复加热是饮水机的耗电大头', '保温温度不必设到最高', '定期清洗内胆可避免二次污染'],
-      q: ['饮水机最费电的情况是？', ['全天反复加热保温', '只在需要时开启加热', '用保温杯接水带走'], 0, '热水散热降温后再次加热，循环往复最费电。']
-    },
-    {
-      id: 'ricecooker', emoji: '🍚', name: '电饭锅', img: 'img/ricecooker.png',
-      powerW: 600, a: 3, loc: '楼层公共厨房', today: '30分钟', kwh: 0.2, month: 2.8, run: 0.5, sb: 0.6, pat: 'evening',
-      ai: ['保温时间过长', '饭煮好后长时间处于保温状态，部分机型保温耗电接近煮饭本身。', '煮好后尽快拔电，多人份集中烹煮减少次数', 0.09],
-      sim: [['每周煮饭', 2, 10, 1, '次', 10, 'down', 0.3], ['保温时长', 0, 60, 10, '分钟', 60, 'down', 0.3]],
-      acts: ['煮好饭及时断电', '提前淘米浸泡缩短加热', '保持内胆底部贴合发热盘'],
-      tips: ['提前泡米 10 分钟可缩短加热时间', '保温超 1 小时不如吃前再加热', '发热盘有污渍会增加耗电'],
-      q: ['电饭锅省电的小技巧是？', ['提前浸泡大米并及时结束保温', '反复开盖查看饭熟没熟', '一直保温随时吃'], 0, '泡米让米粒更快熟透，及时断电避免保温耗电。']
-    },
-    {
       id: 'blanket', emoji: '🛏️', name: '电热毯', img: 'img/blanket.png',
       powerW: 120, a: 1, loc: '北宿2栋-406床铺', today: '2小时', kwh: 0.2, month: 3.5, run: 2, sb: 0, pat: 'night',
       ai: ['整夜高温开启', '电热毯整夜开在高温档，既浪费电也存在安全隐患。', '睡前预热 30 分钟，入睡后切低温档或定时关闭', 0.12],
@@ -388,15 +323,6 @@
       q: ['关于电热毯，正确且省电的用法是？', ['睡前预热，入睡后调低温档', '整夜开高温档睡', '折叠起来用更暖和'], 0, '被窝预热后维持低温即可，整夜高温既费电又危险。']
     },
     {
-      id: 'nightlight', emoji: '🌙', name: '小夜灯', img: 'img/nightlight.png',
-      powerW: 3, a: 1, loc: '北宿2栋-406床头', today: '整夜点亮', kwh: 0.03, month: 0.6, run: 9, sb: 0, pat: 'night',
-      ai: ['天亮后仍未关闭', '早晨天亮后小夜灯经常忘记关闭，虽然功率小但积少成多。', '更换光感应或人体感应小夜灯，天亮自动熄灭', 0.02],
-      sim: [['每晚点亮', 4, 12, 0.5, '小时', 12, 'down', 0.3], ['亮度档位', 1, 3, 1, '档', 3, 'down', 0.15]],
-      acts: ['天亮随手关闭小夜灯', '选用感应式小夜灯', '使用 LED 光源'],
-      tips: ['感应小夜灯比常亮款省电约 80%', '深夜起床短时照明即可', '优先选购带定时功能的型号'],
-      q: ['小夜灯更省电的选择是？', ['人体或光感应自动开关', '24 小时常亮', '买功率最大的最亮款'], 0, '感应灯只在需要时点亮，亮灯时间大幅缩短。']
-    },
-    {
       id: 'console', emoji: '🎮', name: '游戏机', img: 'img/console.png',
       powerW: 150, a: 3, loc: '北宿2栋-406书桌', today: '2小时30分', kwh: 0.32, month: 5, run: 2.5, sb: 1.5, pat: 'evening',
       ai: ['待机下载', '游戏结束后主机长时间保持待机下载，待机功耗不容忽视。', '集中安排下载时段，开启省电模式，不玩时彻底断电', 0.1],
@@ -404,25 +330,6 @@
       acts: ['不玩时关闭主机电源', '开启主机省电模式', '下载完成后退出待机'],
       tips: ['主机待机功耗可达运行时的十分之一', '休息时让主机一起休息', '离开宿舍前拔掉插排最稳妥'],
       q: ['游戏主机暂时不玩又要下载更新，较省电的做法是？', ['设置下载完成后自动关机', '一直开着想起来再关', '开着游戏挂机下载'], 0, '下载完成自动断电，避免主机长时间待机空耗。']
-    },
-    {
-      id: 'speaker', emoji: '🔊', name: '蓝牙音箱', img: 'img/speaker.png',
-      powerW: 20, a: 1, loc: '北宿2栋-406书桌', today: '3小时', kwh: 0.05, month: 0.8, run: 3, sb: 2, pat: 'evening',
-      ai: ['长期蓝牙待机', '音箱使用后未关机，长时间处于蓝牙待机状态，电量被悄悄消耗。', '听完随手关机，充满电后拔掉充电器', 0.03],
-      sim: [['每日播放', 1, 8, 0.5, '小时', 8, 'down', 0.25], ['音量大小', 20, 100, 10, '%', 100, 'down', 0.2]],
-      acts: ['听完随手关机', '充满电及时拔线', '每月做一次充放电保养'],
-      tips: ['音量开到八成即可，最大音量更耗电', '不用时关闭蓝牙可延长续航', '长期不用时保持约 50% 电量存放'],
-      q: ['蓝牙音箱更省电的使用习惯是？', ['听完随手关机并拔下充电器', '一直开着等自动待机', '音量始终调到最大'], 0, '关机断电既省电又保护电池。']
-    },
-    {
-      id: 'toothbrush', emoji: '🪥', name: '电动牙刷', img: 'img/toothbrush.png',
-      powerW: 2, a: 1, loc: '楼层洗漱间', today: '充电待机', kwh: 0.01, month: 0.2, run: 0.1, sb: 23, pat: 'flat',
-      status: '充电待机',
-      ai: ['长期插在充电座', '一次充电可用数十天，牙刷却长期放在带电底座上持续耗电。', '电量低于 30% 再充，充满后取下，日常不插带电底座', 0.015],
-      sim: [['每月充电', 1, 8, 1, '次', 8, 'down', 0.3], ['每次充电', 4, 24, 1, '小时', 24, 'down', 0.2]],
-      acts: ['充满电后取下使用', '不让充电底座长期通电', '使用原装充电器'],
-      tips: ['电动牙刷充一次通常可用 2-4 周', '长期浮充会缩短电池寿命', '刷头建议每 3 个月更换'],
-      q: ['电动牙刷怎样充电更合理？', ['需要时再充，充满取下', '长期插在充电座上', '用到完全没电再充'], 0, '随用随充、充满取下，既省电又利于电池寿命。']
     },
     {
       id: 'powerstrip', emoji: '🔌', name: '智能插排', img: 'img/powerstrip.png',
@@ -450,6 +357,8 @@
   DEVICE_CATALOG.forEach(function (t) { catalogMap[t.catId] = t; });
   var DEFAULT_ADDED = BASE_TEMPLATES.map(function (t) { return t.catId; });
   var addedIds = store.get('added', DEFAULT_ADDED.slice());
+  /* 设备目录精简后，清掉本地记录里已下架的 id（必须在 addedIds 声明之后） */
+  addedIds = addedIds.filter(function (id) { return !!catalogMap[id]; });
   console.log('BOOT added=' + JSON.stringify(addedIds));
   function cloneTemplate(t) { return JSON.parse(JSON.stringify(t)); }
   /* 按 addedIds 顺序从目录克隆重建在管电器（保存参数/删除均作用于 APPLIANCES 实例） */
@@ -1075,8 +984,8 @@
       '<span class="cb-num">' + fmt1(saveKg) + '<em>kg CO₂</em></span>' +
       '<span class="cb-desc">≈ 少开私家车 ' + kmText + '</span></div>' +
       '</div>' +
-      '<p class="cb-tip">💡 坚持 AI 建议与低碳打卡，' + period + '预计还可再减约 <b>' +
-      fmt1(item.ai.saveKg * days * 0.4) + 'kg</b> CO₂</p>' +
+      '<p class="cb-tip">坚持低碳打卡，' + period + '预计还可再减约 <b>' +
+      fmt1(item.ai.saveKg * days * 0.4) + 'kg</b> CO₂。</p>' +
       '</div>';
   }
 
@@ -1591,15 +1500,14 @@
       '<section class="card dcard"><p class="dcard-title">各电器本月用电占比</p>' +
       '  <div class="dm-list">' + rows + '</div></section>' +
       '<section class="card dcard"><p class="dcard-title">碳排放去哪了</p>' +
-      '  <p class="dm-eq">本月 ' + fmt1(totalKg) + 'kg CO₂，约等于 <b>' + treeDays + '</b> 天的大树吸碳量，' +
-      '  或私家车行驶 <b>' + fmt1(totalKg / 0.19) + '</b> 公里的排放。</p>' +
+      '  <p class="dm-eq">本月 ' + fmt1(totalKg) + 'kg CO₂，约等于 <b>' + treeDays + '</b> 天的大树吸碳量。</p>' +
       '  <p class="dm-eq">相比宿舍平均用电习惯，本月已通过 AI 建议与打卡减少约 <b>' +
            fmt1(sumArr(APPLIANCES.map(function (a) { return a.ai.saveKg; })) * 18) + 'kg</b> CO₂。</p>' +
       '</section>' +
       '<section class="card ai-entry" data-act="dorm-ai">' +
-      '  <img src="img/AI.png" alt="AI助手">' +
+      '  <img src="img/ai-mascot.png" alt="AI助手">' +
       '  <div class="ae-info"><b>智能建议</b>' +
-      '  <p>问问 AI：怎样让宿舍用电更省、更低碳？</p></div>' +
+      '  <p>问问 AI：怎样让宿舍用电更低碳？</p></div>' +
       '  <span class="ae-go">›</span>' +
       '</section>' +
       '</main>';
@@ -1615,8 +1523,8 @@
     var treeDays = Math.round(carbonKg / 12 * 365);      /* 一棵树年吸收约 12kg */
     var savedKg = Math.round(sumArr(APPLIANCES.map(function (a) { return a.ai.saveKg; })) * 18 * 10) / 10;
     return {
-      title: '宿舍智能建议',
-      /* 看板「宿舍用电」卡片 + 宿舍用电详情（用电占比 / 碳排放去哪）在对话中的可见回显 */
+      title: '智能建议',
+      /* 看板「宿舍用电」卡片数据在对话中的可见回显（四项指标 + 用电占比） */
       summary: {
         month: fmt1(monthKwh), today: fmt1(todayKwh), carbon: carbonKg, count: APPLIANCES.length,
         rows: APPLIANCES.map(function (a, i) { return { name: a.name, kwh: monthArr[i] }; }),
@@ -1673,6 +1581,8 @@
   var aiReqSeq = 0;
   var aiBusy = false;
   var sheetUnderAi = null;   // 打开 AI 页时底层正在展示的覆盖页
+  var aiAnimPlayed = false;  // 每次进入 AI 页只播放一次入场滚动
+  var aiIntroToken = 0;      // renderAi 重绘后让上一轮 rAF 自动失效
 
   function escHtml(s) {
     return String(s).replace(/[&<>"']/g, function (c) {
@@ -1682,17 +1592,41 @@
 
   var AI_CHIPS = ['怎么用最省电？', '帮我制定本周减碳计划', '待机功耗怎么消除？', '错峰用电建议'];
 
-  function aiWelcome(ctx) {
-    if (ctx.summary) {
-      return '你好，李华！我是宿舍低碳助手 🖐 看板「宿舍用电」卡片已带进对话：本月已用 ' +
-        ctx.summary.month + ' 度、约 ' + ctx.summary.carbon + ' KG CO₂，' +
-        ctx.summary.count + ' 台在管电器。上方卡片里还列出了各电器本月用电占比和碳排放去向，' +
-        '问我怎么省电、怎么错峰、能减多少碳，我都会结合这些数据回答。';
-    }
-    return '你好！关于「' + (ctx.title.replace(' · 智能建议', '')) + '」，我已读取它的用电曲线与诊断结果，可以问我怎么用更省电、如何设置定时、能减多少碳。';
+  /* 数值小数位：由目标值字符串推导，保证滚动过程与最终值的格式一致 */
+  function decOf(v) { var p = String(v).split('.')[1]; return p ? p.length : 0; }
+  /* 生成「可滚动数值」span：data-count 供入场动画读取，textContent 为最终值 */
+  function aiNumSpan(v, suffix) {
+    var t = String(v);
+    return '<b class="ai-roll" data-count="' + t + '" data-dec="' + decOf(t) + '"' +
+      (suffix ? ' data-suffix="' + suffix + '"' : '') + '>' + t + (suffix || '') + '</b>';
   }
 
-  /* 本地兜底回复（未配置 Key 或网络失败时的演示回复） */
+  /* 首条演示对话：把原「碳排放去哪了」的内容合并进「你好，李华」欢迎语 */
+  function aiWelcome(ctx) {
+    if (ctx.summary) {
+      var s = ctx.summary;
+      return '你好，李华！我是碳小绒，你的智能宿舍低碳助手。\n' +
+        '提醒您：本月已用 ' + s.month + ' 度、约 ' + s.carbon + ' KG CO₂。\n' +
+        '本月 ' + s.carbon + 'kg CO₂ 约等于 ' + s.treeDays + ' 天的大树吸碳量。' +
+        '相比宿舍平均用电习惯，已通过 AI 建议与打卡减少约 ' + s.savedKg + 'kg CO₂。\n' +
+        '喵';
+    }
+    return '试试问我：如何节能？';
+  }
+
+  /* 演示对话的 HTML 版本：所有数字都带 data-count，进入页面时一起从 0 滚动 */
+  function aiWelcomeHTML(ctx) {
+    if (!ctx.summary) { return null; }
+    var s = ctx.summary;
+    return '你好，李华！我是碳小绒，你的智能宿舍低碳助手。<br>' +
+      '提醒您：本月已用 ' + aiNumSpan(s.month) + ' 度、约 ' + aiNumSpan(s.carbon) + ' KG CO₂。<br>' +
+      '本月 ' + aiNumSpan(s.carbon) + 'kg CO₂ 约等于 ' + aiNumSpan(s.treeDays) +
+      ' 天的大树吸碳量。相比宿舍平均用电习惯，已通过 AI 建议与打卡减少约 ' +
+      aiNumSpan(s.savedKg) + 'kg CO₂。<br>' +
+      '喵';
+  }
+
+  /* 本地兜底回复（无 Key 或网络失败时的演示回复） */
   function localAiReply(text, ctx) {
     var t = text;
     if (/计划|怎么用|省电|建议|怎么/.test(t)) {
@@ -1700,7 +1634,7 @@
         '1. 空调设 26℃，凌晨 2:00 定时关闭，预计每天省 1.2 度；\n' +
         '2. 热水器避开 18:00-21:00 高峰、用完断电，每天约省 0.4 度；\n' +
         '3. 电脑开启 30 分钟自动休眠、睡前拔插排，消除待机功耗。\n' +
-        '坚持一周大约可减少 8-10kg CO₂。在「我的」里配置 DeepSeek API Key 后，我可以结合实时数据给你更精细的方案。';
+        '坚持一周大约可减少 8-10kg CO₂。';
     }
     if (/待机/.test(t)) {
       return '待机耗电常被忽略：热水器全天保温、电脑深夜不休眠、充电器空载都算。建议给书桌和阳台各配一个带开关的插排，睡前一键断电，预计每天可省约 0.3-0.5 度。';
@@ -1708,60 +1642,122 @@
     if (/错峰|高峰|几点/.test(t)) {
       return '居民电价低谷一般在 23:00-次日 7:00。热水器、充电类用电尽量放到清晨；18:00-21:00 是全网高峰，这段时间少用大功率电器，既省钱也减碳。';
     }
-    return '这是一个很好的问题！简单说：每省 1 度电约减少 0.58kg CO₂。你可以先用模拟推演拖一拖参数看效果，也可以在「我的」里配置 DeepSeek API Key，让我结合你的实时用电数据深入分析。';
+    return '这是一个很好的问题！简单说：每省 1 度电约减少 0.58kg CO₂。';
   }
 
-  /* 看板「宿舍用电」卡片 + 宿舍用电详情的数据在对话中的可见回显
-     （本月用电量/碳排概览 + 各电器本月用电占比 + 碳排放去哪了） */
+  /* 看板数据回显：四项指标卡 + 独立的纯白「用电占比」卡。
+     占比按用电量降序排列；柱状条按 高(≥66%)/中(≥33%)/低 用 橙/蓝/绿 三色对应。 */
+  var AI_RATIO_COLORS = { high: '#F5A623', mid: '#0F6CBD', low: '#0E8A5F' };
   function aiCtxCardHTML(s) {
-    var maxM = Math.max.apply(null, (s.rows || []).map(function (r) { return r.kwh; }).concat([1]));
-    var rows = (s.rows || []).map(function (r) {
+    var sorted = (s.rows || []).slice().sort(function (a, b) { return b.kwh - a.kwh; });
+    var maxM = Math.max.apply(null, sorted.map(function (r) { return r.kwh; }).concat([1]));
+    var rows = sorted.map(function (r) {
       var w = Math.max(4, Math.round(r.kwh / maxM * 100));
-      return '<div class="dm-row"><span class="dm-name">' + escHtml(r.name) + '</span>' +
-        '<div class="dm-track"><div class="dm-fill" style="width:' + w + '%"></div></div>' +
-        '<span class="dm-val">' + fmt1(r.kwh) + '度</span></div>';
+      var color = w >= 66 ? AI_RATIO_COLORS.high
+        : (w >= 33 ? AI_RATIO_COLORS.mid : AI_RATIO_COLORS.low);
+      var val = fmt1(r.kwh);
+      return '<div class="ai-ratio-row">' +
+        '<span class="ai-ratio-name">' + escHtml(r.name) + '</span>' +
+        '<div class="ai-ratio-track"><div class="ai-ratio-fill" data-w="' + w + '"' +
+        ' style="width:' + w + '%;background:' + color + '"></div></div>' +
+        '<span class="ai-ratio-val" data-count="' + val + '" data-dec="' + decOf(val) +
+        '" data-suffix="度">' + val + '度</span>' +
+        '</div>';
     }).join('');
-    return '<div class="ai-ctx-card">' +
-      '<p class="ai-ctx-from">来自看板 · 宿舍用电</p>' +
+    return '<div class="ai-ctx-card" id="aiCtxCard">' +
       '<div class="ai-ctx-grid">' +
-      '<div><span>本月用电量</span><p class="ai-ctx-val"><b>' + s.month + '</b><em>度</em></p></div>' +
-      '<div><span>碳排放量</span><p class="ai-ctx-val"><b>' + s.carbon + '</b><em>KG</em></p></div>' +
-      '<div><span>今日用电</span><p class="ai-ctx-val"><b>' + s.today + '</b><em>度</em></p></div>' +
-      '<div><span>在管电器</span><p class="ai-ctx-val"><b>' + s.count + '</b><em>台</em></p></div>' +
-      '</div>' +
-      (rows ? '<p class="ai-ctx-sec">各电器本月用电占比</p><div class="dm-list">' + rows + '</div>' : '') +
-      '<p class="ai-ctx-sec">碳排放去哪了</p>' +
-      '<p class="dm-eq">本月 ' + s.carbon + 'kg CO₂，约等于 <b>' + s.treeDays +
-      '</b> 天的大树吸碳量，或私家车行驶 <b>' + s.carKm + '</b> 公里的排放。</p>' +
-      '<p class="dm-eq">相比宿舍平均用电习惯，本月已通过 AI 建议与打卡减少约 <b>' +
-      s.savedKg + 'kg</b> CO₂。</p>' +
-      '<p class="ai-ctx-hint">这些数据已带入对话，并同步给 AI 作为分析依据。</p>' +
-      '</div>';
+      '<div><span>本月用电量</span><p class="ai-ctx-val"><b data-count="' + s.month +
+        '" data-dec="' + decOf(s.month) + '">' + s.month + '</b><em>度</em></p></div>' +
+      '<div><span>碳排放量</span><p class="ai-ctx-val"><b data-count="' + s.carbon +
+        '" data-dec="' + decOf(s.carbon) + '">' + s.carbon + '</b><em>KG</em></p></div>' +
+      '<div><span>今日用电</span><p class="ai-ctx-val"><b data-count="' + s.today +
+        '" data-dec="' + decOf(s.today) + '">' + s.today + '</b><em>度</em></p></div>' +
+      '<div><span>在管电器</span><p class="ai-ctx-val"><b data-count="' + s.count +
+        '" data-dec="0">' + s.count + '</b><em>台</em></p></div>' +
+      '</div></div>' +
+      '<div class="ai-ratio-card" id="aiRatioCard">' +
+      '<p class="ai-ratio-title">各电器本月用电占比</p>' +
+      '<div class="ai-ratio-list">' + rows + '</div>' +
+      '<div class="ai-ratio-legend">' +
+      '<span><i style="background:' + AI_RATIO_COLORS.high + '"></i>高</span>' +
+      '<span><i style="background:' + AI_RATIO_COLORS.mid + '"></i>中</span>' +
+      '<span><i style="background:' + AI_RATIO_COLORS.low + '"></i>低</span>' +
+      '</div></div>';
+  }
+
+  /* 入场动效：数字 5s、柱状条 3s，均从 0 开始。
+     该 WebView 的 WAAPI / CSS transition 不上屏中间帧，必须用 requestAnimationFrame
+     逐帧写内联 textContent / width（与页面侧滑动画采用同一套方案）。 */
+  function aiNumFmt(v, dec) {
+    var m = Math.pow(10, dec);
+    return (Math.round(v * m) / m).toString();
+  }
+  function runAiIntroAnimation() {
+    /* 只在刚进入、仍停留在首条演示对话时播放；用户已开始对话则不重播 */
+    if (aiAnimPlayed || !aiOpen || aiMsgs.length > 1) { aiAnimPlayed = true; return; }
+    aiAnimPlayed = true;
+    var numEls = aiBody.querySelectorAll('[data-count]');
+    var barEls = aiBody.querySelectorAll('[data-w]');
+    if (!numEls.length && !barEls.length) { return; }
+    var nums = Array.prototype.map.call(numEls, function (el) {
+      return {
+        el: el,
+        target: parseFloat(el.getAttribute('data-count')) || 0,
+        dec: parseInt(el.getAttribute('data-dec'), 10) || 0,
+        suffix: el.getAttribute('data-suffix') || '',
+        final: el.textContent
+      };
+    });
+    var bars = Array.prototype.map.call(barEls, function (el) {
+      return { el: el, w: parseFloat(el.getAttribute('data-w')) || 0, final: el.style.width };
+    });
+    var token = ++aiIntroToken;
+    var t0 = 0;
+    nums.forEach(function (n) { n.el.textContent = aiNumFmt(0, n.dec) + n.suffix; });
+    bars.forEach(function (b) { b.el.style.width = '0%'; });
+    function frame(ts) {
+      if (token !== aiIntroToken) { return; }   // innerHTML 已重建，放弃本轮
+      if (!t0) { t0 = ts; }
+      var elapsed = ts - t0;
+      var pn = Math.min(1, elapsed / 5000);
+      var en = 1 - Math.pow(1 - pn, 3);
+      nums.forEach(function (n) {
+        n.el.textContent = aiNumFmt(n.target * en, n.dec) + n.suffix;
+      });
+      var pb = Math.min(1, elapsed / 3000);
+      var eb = 1 - Math.pow(1 - pb, 3);
+      bars.forEach(function (b) { b.el.style.width = (b.w * eb).toFixed(2) + '%'; });
+      if (pn < 1 || pb < 1) {
+        requestAnimationFrame(frame);
+      } else {
+        nums.forEach(function (n) { n.el.textContent = n.final; });
+        bars.forEach(function (b) { b.el.style.width = b.final; });
+      }
+    }
+    requestAnimationFrame(frame);
   }
 
   function renderAi() {
+    aiIntroToken++;   // 重绘后让上一轮动画帧失效，避免写入已脱离文档的节点
     var bubbles = aiMsgs.map(function (m) {
       if (m.role === 'user') {
         return '<div class="ai-row me"><div class="ai-bubble me">' + escHtml(m.content).replace(/\n/g, '<br>') + '</div></div>';
       }
-      return '<div class="ai-row ai"><img src="img/AI.png" class="ai-ava">' +
-        '<div class="ai-bubble ai">' + escHtml(m.content).replace(/\n/g, '<br>') + '</div></div>';
+      var body = m.html ? m.html : escHtml(m.content).replace(/\n/g, '<br>');
+      return '<div class="ai-row ai"><img src="img/ai-mascot.png" class="ai-ava">' +
+        '<div class="ai-bubble ai">' + body + '</div></div>';
     }).join('');
     var chipsHtml = aiMsgs.length <= 1
       ? '<div class="ai-chips">' + AI_CHIPS.map(function (c) {
           return '<button data-act="ai-chip">' + c + '</button>';
         }).join('') + '</div>'
       : '';
-    var typing = aiBusy ? '<div class="ai-row ai"><img src="img/AI.png" class="ai-ava">' +
+    var typing = aiBusy ? '<div class="ai-row ai"><img src="img/ai-mascot.png" class="ai-ava">' +
       '<div class="ai-bubble ai typing"><i></i><i></i><i></i></div></div>' : '';
     var ctxCard = (aiCtx && aiCtx.summary) ? aiCtxCardHTML(aiCtx.summary) : '';
     aiBody.innerHTML =
-      '<div class="siri-orb" aria-hidden="true"><span></span></div>' +
       '<header class="siri-head">' +
-      '<p class="siri-title">智能建议</p><p class="siri-sub">' + escHtml(aiCtx.title) + '</p>' +
-      '<span class="ai-key-state' + (getAiKey() ? ' on' : '') + '">' +
-      (getAiKey() ? 'DeepSeek 已连接' : '演示模式 · 未配置 Key') + '</span>' +
-      '<button class="siri-dorm" data-act="ai-dorm">宿舍用电详情 ›</button></header>' +
+      '<p class="siri-title">智能建议</p></header>' +
       '<div class="ai-scroll" id="aiScroll">' + ctxCard + bubbles + typing + chipsHtml + '</div>' +
       '<div class="ai-input-bar">' +
       '<input id="aiInput" type="text" placeholder="问问 AI 省电妙招…" autocomplete="off">' +
@@ -1816,7 +1812,8 @@
   function openAi(ctx) {
     if (aiOpen) { return; }
     aiCtx = ctx;
-    aiMsgs = [{ role: 'ai', content: aiWelcome(ctx) }];
+    aiAnimPlayed = false;   // 每次进入都重新播放数字/柱状条入场动效
+    aiMsgs = [{ role: 'ai', content: aiWelcome(ctx), html: aiWelcomeHTML(ctx) }];
     aiBusy = false;
     renderAi();
     pageAi.classList.add('show');
@@ -1825,8 +1822,11 @@
     /* 保存底层页动画状态：AI 关闭后恢复它的侧滑跟手 */
     sheetUnderAi = sheet;
     openSlide(pageAi);
+    /* 页面可见后再启动入场滚动，避免 display:none 期间 rAF 被节流 */
+    requestAnimationFrame(function () { runAiIntroAnimation(); });
   }
   function finalizeAi() {
+    aiIntroToken++;   // 停止仍在运行的入场动画帧
     aiOpen = false;
     aiBusy = false;
     pageAi.classList.remove('show');
@@ -1844,19 +1844,6 @@
       window.TankanBridge.setSubOpen(false);
     }
   }
-  /* AI 页顶部「宿舍用电详情」入口：收起 AI（及其底层详情）后打开宿舍页 */
-  function gotoDormFromAi() {
-    if (dormOpen) { finalizeAi(); return; }   /* AI 本就叠在宿舍页上：收起即可 */
-    aiOpen = false;
-    aiBusy = false;
-    pageAi.classList.remove('show');
-    if (sheet) { cancelSheetAnim(sheet); sheet = null; }
-    clearSheet(pageAi);
-    sheetUnderAi = null;
-    if (detailOpen) { finalizeDetail(); clearSheet(pageDetail); }
-    openDormFrom();
-  }
-
   pageAi.addEventListener('click', function (e) {
     var t = e.target.closest('[data-act]');
     if (!t || !aiOpen) { return; }
@@ -1865,8 +1852,6 @@
       aiAsk(inp ? inp.value : '');
     } else if (t.dataset.act === 'ai-chip') {
       aiAsk(t.textContent);
-    } else if (t.dataset.act === 'ai-dorm') {
-      gotoDormFromAi();
     }
   });
   pageAi.addEventListener('keydown', function (e) {
@@ -1954,7 +1939,8 @@
         paintRange(e.target);
         var res = simCompute(modal, APPLIANCES[goalIdx]);
         modal.querySelector('.sim-kg').textContent = res.kg.toFixed(2);
-        modal.querySelector('.sim-money').textContent = res.money.toFixed(1);
+        var moneyEl = modal.querySelector('.sim-money');
+        if (moneyEl) { moneyEl.textContent = res.money.toFixed(1); }
       });
     }
     modal.style.display = 'flex';
@@ -1965,19 +1951,19 @@
       '<button class="gm-more" data-act="' + (editing ? 'gm-back' : 'gm-more') + '">' + moreInner +
       '</button></div>' + body +
       '<div class="gm-sec"><p class="gm-sec-title">模拟推演</p>' +
-      '<p class="sim-tip">拖一拖，看看改变习惯后能减多少碳、省多少钱：</p>' +
+      '<p class="sim-tip">拖动滑块，看看改变习惯后能减多少碳</p>' +
       simRowsHTML(item) +
-      '<div class="sim-result">预计每日减少 <b class="sim-kg">0.0</b> kg CO₂' +
-      '　·　每月省电费 <b class="sim-money">0</b> 元</div></div>' +
+      '<div class="sim-result">预计每日减少 <b class="sim-kg">0.0</b> kg CO₂</div></div>' +
       '<button class="pill-btn primary block" data-act="sim-apply"' + (set ? ' disabled' : '') + '>' +
-      (set ? '✓ 提醒已设置' : '采用这个方案，并提醒我') + '</button>' +
+      (set ? '✓ 提醒已设置' : '采用这个方案') + '</button>' +
       '</div>';
     /* init：滑块进度填充 + 初始推演结果 */
     var ranges = modal.querySelectorAll('.sim-range');
     for (var i = 0; i < ranges.length; i++) { paintRange(ranges[i]); }
     var res0 = simCompute(modal, item);
     modal.querySelector('.sim-kg').textContent = res0.kg.toFixed(2);
-    modal.querySelector('.sim-money').textContent = res0.money.toFixed(1);
+    var moneyEl0 = modal.querySelector('.sim-money');
+    if (moneyEl0) { moneyEl0.textContent = res0.money.toFixed(1); }
     /* 卡片最大高度用 px 显式设定：本 WebView 的 dvh/vh 单位不可靠（实测算成 0），
        否则内容会被压扁；同时强制重排，规避 display:none→flex 新内容不绘制 */
     modal.querySelector('.gm-card').style.maxHeight = Math.round(window.innerHeight * 0.76) + 'px';
@@ -2009,10 +1995,10 @@
     var pct = Math.round(done / QUIZ_PER_DAY * 100);
     quizBody.innerHTML =
       '<header class="top"><h1 class="top-title">低碳答题</h1>' +
-      '<p class="top-sub">AI 每天为你出 15 道题，连续打卡冲连胜 🔥</p></header>' +
+      '<p class="top-sub">连续打卡冲连胜</p></header>' +
       '<main class="sub-main">' +
       '<section class="card qz-home">' +
-      '<img src="img/AI.png" class="qz-ai-logo">' +
+      '<img src="img/ai-mascot.png" class="qz-ai-logo">' +
       '<p class="qz-ai-title">今日 15 题</p>' +
       '<span class="qz-ai-badge">' + (aiBadge ? 'DeepSeek 实时出题' : (getAiKey() ? 'DeepSeek 已连接' : 'AI 演示题库')) + '</span>' +
       '<div class="qz-streak"><b>🔥 ' + streak + '</b><span>天连胜</span></div>' +
@@ -2433,17 +2419,7 @@
       '<div class="pet-shadow"></div>' +
       '<div class="pet-inner">' +
       '<div class="pet-body" id="petBody">' +
-      '<div class="pet-arm left"></div>' +
-      '<div class="pet-arm right" id="petArmR"></div>' +
-      '<div class="pet-leg left"><div class="pet-shoe"></div></div>' +
-      '<div class="pet-leg right"><div class="pet-shoe"></div></div>' +
-      '<div class="pet-fluff"></div>' +
-      '<div class="pet-shine"></div>' +
-      '<div class="pet-eye left"><span class="pet-glint"></span></div>' +
-      '<div class="pet-eye right"><span class="pet-glint"></span></div>' +
-      '<div class="pet-cheek left"></div>' +
-      '<div class="pet-cheek right"></div>' +
-      '<div class="pet-mouth"></div>' +
+      '<img class="pet-img" id="petArmR" src="img/ai-mascot.png" alt="碳小绒" draggable="false">' +
       '</div></div></div></div>' +
       '<div class="pet-info">' +
       '<p class="pet-name">碳小绒</p>' +
@@ -2591,7 +2567,7 @@
     stopPetBlink();
     var tick = function () {
       if (!pageMineEl.classList.contains('show')) { return; }
-      var eyes = document.querySelectorAll('.pet-eye');
+      var eyes = document.querySelectorAll('.pet-img');
       if (!eyes.length) { petBlinkTimer = setTimeout(tick, 1200); return; }
       for (var i = 0; i < eyes.length; i++) eyes[i].classList.add('blink');
       setTimeout(function () { for (var i = 0; i < eyes.length; i++) eyes[i].classList.remove('blink'); }, 150);

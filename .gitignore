@@ -1,13 +1,23 @@
-# Android 构建产物
+# Android / Gradle 构建产物
 Tankan/.gradle/
 Tankan/build/
 Tankan/app/build/
 Tankan/.idea/
+Tankan/.kotlin/
 Tankan/captures/
+.workbuddy/
+*.iml
 *.log
 
-# 本机路径（不提交）
+# 本机配置与签名密钥（不提交）
 Tankan/local.properties
+Tankan/keystore/
+Tankan/keystore.properties
+
+# 编译产物：APK 由 GitHub Release 分发，不入库
+*.apk
+dist/*.apk
+dist/*.png
 
 # 未使用的 Mi Sans 字体格式（应用仅用 ttf 三个字重；文件保留在磁盘）
 Resource/Mi Sans/**/*.otf

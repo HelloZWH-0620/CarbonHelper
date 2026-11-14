@@ -1,4 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
     <color name="ic_launcher_background">#7BBFE0</color>
+
+    <!-- 纯黑窗口底 / Android 12 启动画面底色（强制不透明，杜绝启动瞬间的浅色闪屏） -->
+    <color name="app_black">#FF000000</color>
 </resources>

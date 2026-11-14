@@ -1,11 +1,40 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
+    <!--
+      Android 12（API 31 / Material You）规范实现：
+
+      1. parent 固定为 Light 主题，且工程不提供任何 values-night 资源；
+         Activity 另在 attachBaseContext 把 uiMode 强锁为 UI_MODE_NIGHT_NO，
+         系统夜间模式（真机实测开启）不会让 resources / WebView / Compose 变暗。
+      2. 使用 API 31 引入的平台 SplashScreen 属性声明启动画面，避免 Android 12
+         沿用旧的 windowBackground 闪屏实现；启动底色为纯黑。
+      3. 边到边：系统栏透明 + 关闭对比度遮罩，由 WindowInsetsController 接管；
+         状态栏在应用进入时隐藏（见 MainActivity.hideStatusBar）。
+      4. 窗口底色为纯黑，因此 windowLightStatusBar / windowLightNavigationBar
+         必须为 false —— 用户下滑瞬时唤出系统栏时，浅色图标才能在黑底上保持对比度
+         （这才是 Android 12 的系统栏图标对比度规范）。浅色模式锁定的是 UI 主题，
+         不是系统栏图标颜色。
+    -->
     <style name="Theme.Tankan" parent="android:Theme.Material.Light.NoActionBar">
+
+        <!-- ===== Android 12 Splash Screen（平台属性，minSdk 31 可直接引用） ===== -->
+        <item name="android:windowSplashScreenBackground">@color/app_black</item>
+        <item name="android:windowSplashScreenAnimatedIcon">@mipmap/ic_launcher</item>
+        <item name="android:windowSplashScreenIconBackgroundColor">@color/app_black</item>
+        <item name="android:windowSplashScreenAnimationDuration">0</item>
+
+        <!-- ===== 纯黑窗口底 ===== -->
+        <item name="android:windowBackground">@drawable/window_bg</item>
+        <item name="android:colorBackground">@color/app_black</item>
+
+        <!-- ===== 边到边系统栏 ===== -->
         <item name="android:statusBarColor">@android:color/transparent</item>
         <item name="android:navigationBarColor">@android:color/transparent</item>
         <item name="android:windowLightStatusBar">false</item>
         <item name="android:windowLightNavigationBar">false</item>
-        <item name="android:windowBackground">@drawable/window_bg</item>
         <item name="android:windowLayoutInDisplayCutoutMode">shortEdges</item>
+        <item name="android:windowNoTitle">true</item>
+        <item name="android:windowActionBar">false</item>
+        <item name="android:windowContentOverlay">@null</item>
     </style>
 </resources>

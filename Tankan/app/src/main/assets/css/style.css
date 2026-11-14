@@ -9,7 +9,10 @@
 @font-face { font-family: 'MiSans'; src: url('../fonts/MiSans-Bold.ttf'); font-weight: 700; }
 
 :root {
-  --sat: 0px;            /* 顶部安全区（状态栏），由原生注入 */
+  /* 锁定浅色：本页只声明 light 配色，系统夜间模式不参与 WebView 渲染 */
+  color-scheme: light;
+
+  --sat: 0px;            /* 顶部挖孔安全区（状态栏已隐藏），由原生注入 */
   --sab: 0px;            /* 底部安全区（手势条），由原生注入 */
 
   /* 6.7 寸设计（pt 按屏幕密度换算为 CSS px=dp） */
@@ -27,10 +30,10 @@
   --text-mid: #44535C;
   --text-weak: #7A8790;
 
-  /* 亚克力玻璃材质 */
-  --surface-glass: rgba(255, 255, 255, .6);
-  --surface-glass-strong: rgba(255, 255, 255, .82);
-  --hairline: rgba(255, 255, 255, .6);
+  /* 亚克力玻璃材质：纯黑底上提高不透明度，保持「浅色模式」的浅色卡片与深色文字对比度 */
+  --surface-glass: rgba(255, 255, 255, .94);
+  --surface-glass-strong: rgba(255, 255, 255, .97);
+  --hairline: rgba(255, 255, 255, .75);
 
   /* 统一规范：除按钮/胶囊/头像外，所有卡片圆角不超过 5px */
   --r-lg: 5px;
@@ -44,12 +47,14 @@
 
 /* 基准字号：以 390px 宽为基准做线性缩放，1rem ≈ 系统默认正文字号（约 14px）。
    --fs 由原生按系统「字体大小」(fontScale) 注入，整体等比跟随系统字体设置 */
-html { font-size: calc(min(100vw / 32, 16px) * var(--fs, 1)); }
+/* 纯黑底：与原生 windowBackground / Compose 根 Box 三处一致，杜绝加载白闪 */
+html { font-size: calc(min(100vw / 32, 16px) * var(--fs, 1)); background: #000; }
 
 body {
   font-family: 'MiSans', system-ui, -apple-system, 'Segoe UI Variable', sans-serif;
   height: 100dvh;
   overflow: hidden;
+  background: #000;
   color: #fff;
   user-select: none;
   -webkit-user-select: none;
@@ -57,7 +62,7 @@ body {
 
 #bg {
   position: fixed; inset: 0; z-index: 0;
-  background: url('../img/Background.png') center center / cover no-repeat;
+  background: #000;   /* 纯黑背景（替换原蓝色背景图） */
 }
 
 /* 页面层：整体滚动（标题/概览/电器一起滚动） */
@@ -236,7 +241,7 @@ body {
    JS 显式视口高度确保内容可靠渲染，结束后清除内联样式。 */
 .page.detail {
   z-index: 20;
-  background: url('../img/Background.png') center center / cover no-repeat;
+  background: #000;   /* 纯黑背景（替换原蓝色背景图） */
   display: none;
 }
 .page.detail.open {
@@ -246,7 +251,7 @@ body {
 /* 宿舍 / 答题 覆盖页：默认隐藏，由 JS 以卡片缩放 / 侧滑方式打开 */
 .follow-page {
   z-index: 18;
-  background: url('../img/Background.png') center center / cover no-repeat;
+  background: #000;   /* 纯黑背景（替换原蓝色背景图） */
   display: none;
 }
 .follow-page.show { display: block; }
@@ -984,57 +989,28 @@ body {
    ============================================================ */
 .siri-page {
   z-index: 24;
-  /* 与主界面一致的背景图 */
-  background: url('../img/Background.png') center center / cover no-repeat;
-}
-.siri-orb {
-  position: absolute; top: calc(var(--sat,24px) + 1rem); right: 1.6rem;
-  width: 2.6rem; height: 2.6rem; border-radius: 50%;
-  background: conic-gradient(from 210deg, #5E7EFF, #FF54A6, #24CEAC, #5E7EFF);
-  filter: blur(.5px);
-  box-shadow: 0 0 18px rgba(120,130,255,.6);
-  animation: orbPulse 3.2s ease-in-out infinite;
-  pointer-events: none;
-}
-.siri-orb span { display: none; }
-@keyframes orbPulse {
-  0%, 100% { transform: scale(1); opacity: .9; }
-  50% { transform: scale(1.12); opacity: 1; }
+  /* 与主界面一致的纯黑底 */
+  background: #000;
 }
 #aiBody { position: absolute; inset: 0; display: flex; flex-direction: column; }
-/* 与二级页一致：顶部避开原生返回键（14dp 边距 + 48dp 高） */
-.siri-head { padding: calc(var(--sat, 24px) + 7.6rem) 1.6rem .9rem; color: #fff; }
+/* 「智能建议」与原生液态返回键同排：
+   返回键 left=14px、top=--sat+14px、宽 62px、高 48px（Compose dp == CSS px）。
+   内容区从 88px 起（14+62+12），高度 48px，用 align-items:center 让标题与按键垂直居中对齐。 */
+.siri-head {
+  display: flex; align-items: center; gap: .6rem;
+  flex-shrink: 0;
+  height: calc(var(--sat, 0px) + 62px);
+  padding: calc(var(--sat, 0px) + 14px) 1.6rem 0 88px;
+  color: #fff;
+}
 .siri-title {
-  font-size: 2.1rem; font-weight: 700; letter-spacing: .01em;
+  font-size: 2.1rem; font-weight: 700; letter-spacing: .01em; line-height: 1;
   text-shadow: 0 1px 3px rgba(23, 36, 43, .22);
+  white-space: nowrap;
 }
-.siri-sub {
-  margin-top: .2rem; font-size: 1.15rem; color: rgba(255, 255, 255, .94);
-  text-shadow: 0 1px 2px rgba(23, 36, 43, .18);
-}
-.ai-key-state {
-  display: inline-block; margin-top: .55rem;
-  font-size: 1rem; font-weight: 600;
-  padding: .38rem .8rem; border-radius: 999px;
-  background: rgba(255, 255, 255, .62); color: var(--text-mid);
-  border: 1px solid rgba(255, 255, 255, .7);
-  -webkit-backdrop-filter: blur(20px) saturate(160%);
-  backdrop-filter: blur(20px) saturate(160%);
-}
-.ai-key-state.on { background: rgba(36,206,172,.24); color: #0B6B4B; border-color: rgba(14,138,95,.35); }
 
-/* AI 页顶部「宿舍用电详情」入口 */
-.siri-dorm {
-  display: inline-block; margin-top: .55rem; margin-left: .4rem;
-  font-family: inherit; font-size: 1.05rem; font-weight: 600;
-  padding: .45rem 1rem; border-radius: 999px;
-  background: rgba(255,255,255,.72); color: var(--accent-strong);
-  border: 1px solid rgba(255,255,255,.7);
-  -webkit-backdrop-filter: blur(20px) saturate(160%);
-  backdrop-filter: blur(20px) saturate(160%);
-  box-shadow: var(--shadow-card);
-}
-.siri-dorm:active { background: #fff; }
+/* 演示对话里从 0 滚动的数字 */
+.ai-roll { color: #0B6B4B; font-weight: 700; }
 
 .ai-scroll {
   flex: 1; min-height: 0; overflow-y: auto; -webkit-overflow-scrolling: touch;
@@ -1085,15 +1061,56 @@ body {
   border: 1px solid rgba(255, 255, 255, .7);
   box-shadow: var(--shadow-card);
 }
-.ai-ctx-from { font-size: 1.05rem; font-weight: 700; letter-spacing: .02em; color: #0B6B4B; }
-.ai-ctx-grid { display: flex; flex-wrap: wrap; gap: .5rem 1.4rem; margin-top: .6rem; }
-.ai-ctx-grid > div { display: flex; flex-direction: column; gap: .1rem; }
+/* 四项指标：2×2 等宽等高、彼此独立的矩形卡片 */
+.ai-ctx-grid {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  grid-auto-rows: 4.8rem;
+  gap: .6rem;
+}
+.ai-ctx-grid > div {
+  display: flex; flex-direction: column; justify-content: center; gap: .15rem;
+  min-width: 0;
+  padding: .5rem .75rem;
+  border-radius: .85rem;
+  background: rgba(255, 255, 255, .92);
+  border: 1px solid rgba(255, 255, 255, .95);
+  box-shadow: 0 1px 3px rgba(23, 36, 43, .08);
+}
 .ai-ctx-grid span { font-size: 1.05rem; color: var(--text-mid); }
 .ai-ctx-val { display: flex; align-items: baseline; gap: .2rem; }
 .ai-ctx-val b { font-size: 1.9rem; font-weight: 700; line-height: 1.05; color: var(--text-strong); }
 .ai-ctx-val em { font-size: 1rem; font-style: normal; color: var(--text-mid); }
-.ai-ctx-sec { margin-top: .95rem; margin-bottom: .55rem; font-size: 1.1rem; font-weight: 700; color: var(--text-strong); }
-.ai-ctx-hint { margin-top: .7rem; font-size: 1.05rem; line-height: 1.5; color: var(--text-mid); }
+/* 用电占比：独立纯白卡片，行按用电量降序；柱状条高=橙 / 中=蓝 / 低=绿 */
+.ai-ratio-card {
+  padding: .95rem 1.05rem;
+  border-radius: 1.1rem;
+  background: #FFFFFF;
+  border: 1px solid #FFFFFF;
+  box-shadow: var(--shadow-card);
+}
+.ai-ratio-title {
+  font-size: 1.15rem; font-weight: 700; color: var(--text-strong);
+  margin-bottom: .8rem;
+}
+.ai-ratio-list { display: grid; gap: .7rem; }
+.ai-ratio-row { display: flex; align-items: center; gap: .7rem; }
+.ai-ratio-name { flex-shrink: 0; width: 3.9rem; font-size: 1.15rem; color: var(--text-strong); }
+.ai-ratio-track {
+  flex: 1; height: .85rem; border-radius: 999px;
+  background: rgba(23, 36, 43, .09); overflow: hidden;
+}
+.ai-ratio-fill { height: 100%; border-radius: 999px; }
+.ai-ratio-val {
+  flex-shrink: 0; width: 3.9rem; text-align: right;
+  font-size: 1.1rem; font-weight: 600; color: var(--text-strong);
+}
+.ai-ratio-legend {
+  display: flex; justify-content: flex-end; gap: .9rem;
+  margin-top: .9rem; font-size: 1rem; color: var(--text-weak);
+}
+.ai-ratio-legend span { display: inline-flex; align-items: center; gap: .3rem; }
+.ai-ratio-legend i { width: .7rem; height: .7rem; border-radius: 50%; display: inline-block; }
 
 .ai-chips { display: flex; flex-wrap: wrap; gap: .5rem; padding: .1rem 0; }
 .ai-chips button {
@@ -1572,11 +1589,9 @@ body {
 .gm-custom button { padding: 0 1.4rem; }
 
 /* ============================================================
-   碳小绒（CSS 绘制，绿色毛绒宠物 · 跟随积分等级成长）
+   碳小绒（统一使用 AI形象.png；保留等级成长、浮动、跳跃与粒子动效）
    ============================================================ */
-.pet-card {
-  display: flex; gap: 1rem; align-items: center;
-}
+.pet-card { display: flex; gap: 1rem; align-items: center; }
 .pet-stage {
   flex-shrink: 0; position: relative;
   width: 11rem; height: 11rem;
@@ -1615,84 +1630,26 @@ body {
   background: radial-gradient(ellipse at center, rgba(28,82,48,.35), rgba(28,82,48,0) 72%);
   z-index: 0;
 }
-.pet-fluff {
-  position: absolute; left: 6px; top: 6px; right: 6px; bottom: 6px;
-  border-radius: 50%;
-  background: radial-gradient(circle at 30% 24%, #e9ffdd 0%, #a9ee9e 15%, #63cb70 40%, #2f9147 72%, #1c6b33 100%);
-  box-shadow: inset -.7rem -.9rem 1.9rem rgba(12,60,30,.38), inset .6rem .7rem 1.6rem rgba(255,255,255,.28);
-  z-index: 2;
+.pet-img {
+  display: block; position: relative; z-index: 2;
+  width: 100%; height: 100%; object-fit: contain;
+  user-select: none; -webkit-user-drag: none;
+  transition: transform .35s ease, opacity .35s ease, filter .35s ease;
 }
-/* 等级 0：种子状态（黄小芽） */
-.pet.level-0 .pet-fluff {
-  background: radial-gradient(circle at 50% 50%, #fff5c8 0%, #f2d86b 55%, #c9a22c 100%);
-  box-shadow: inset -.5rem -.6rem 1.2rem rgba(130,90,20,.35), inset .4rem .5rem 1rem rgba(255,255,255,.55);
+/* 等级成长：种子 → 发芽 → 碳小绒，用同一张形象表现体量变化 */
+.pet.level-0 .pet-img { transform: scale(.56); opacity: .72; filter: grayscale(.4); }
+.pet.level-1 .pet-img { transform: scale(.80); opacity: .90; }
+.pet.level-2 .pet-img { transform: scale(1); }
+/* 点击反馈：轻微挥手（沿用原 petArmR 的 waving class） */
+.pet-img.waving { animation: petImgWave .55s ease-in-out 3; }
+@keyframes petImgWave {
+  0%,100% { transform: rotate(0deg); }
+  30% { transform: rotate(-7deg); }
+  60% { transform: rotate(6deg); }
 }
-.pet.level-0 .pet-eye, .pet.level-0 .pet-cheek, .pet.level-0 .pet-mouth,
-.pet.level-0 .pet-shoe { display: none; }
-.pet.level-0 .pet-body::after {
-  content: '🌱'; position: absolute; left: 50%; top: 30%; transform: translateX(-50%);
-  font-size: 2.2rem; z-index: 3;
-}
-.pet.level-0 .pet-arm, .pet.level-0 .pet-leg { opacity: .55; }
-/* 等级 1：发芽状态（浅绿小苗） */
-.pet.level-1 .pet-fluff {
-  background: radial-gradient(circle at 30% 24%, #f3ffe0 0%, #c8f29e 35%, #7cd27a 70%, #3da450 100%);
-}
-.pet-shine {
-  position: absolute; left: 6px; top: 6px; right: 6px; bottom: 6px;
-  border-radius: 50%;
-  background: radial-gradient(circle at 32% 24%, rgba(255,255,255,.8) 0%, rgba(255,255,255,.22) 24%, rgba(255,255,255,0) 48%);
-  z-index: 4; pointer-events: none;
-}
-.pet-eye {
-  position: absolute; top: 3.8rem; width: 1.5rem; height: 1.7rem; border-radius: 50%;
-  background: radial-gradient(circle at 40% 34%, #3a5f50, #16241d 72%);
-  overflow: hidden; z-index: 6;
-}
-.pet-eye.left { left: 2.6rem; }
-.pet-eye.right { right: 2.6rem; }
-.pet-eye.blink { transform: scaleY(.08); }
-.pet-glint {
-  position: absolute; top: .35rem; left: .35rem; width: .55rem; height: .55rem;
-  border-radius: 50%; background: #fff; box-shadow: 0 0 .4rem rgba(255,255,255,.95);
-}
-.pet-cheek {
-  position: absolute; top: 5.2rem; width: 1.3rem; height: .8rem; border-radius: 50%;
-  background: radial-gradient(circle, rgba(255,132,148,.78), rgba(255,132,148,0) 70%);
-  z-index: 6;
-}
-.pet-cheek.left { left: 1.2rem; }
-.pet-cheek.right { right: 1.2rem; }
-.pet-mouth {
-  position: absolute; left: 50%; top: 5.7rem; width: 1.1rem; height: .55rem;
-  margin-left: -.55rem; border-bottom: 2px solid #1c2b22; border-radius: 50%; z-index: 6;
-}
-.pet-arm {
-  position: absolute; top: 5rem; width: .55rem; height: 2.9rem; border-radius: 999px;
-  background: linear-gradient(180deg,#7ed689,#2f8b47); transform-origin: top center; z-index: 1;
-}
-.pet-arm.left { left: -.1rem; transform: rotate(26deg); }
-.pet-arm.right { right: -.1rem; transform: rotate(-26deg); }
-.pet-arm.right.waving { animation: petWave .55s ease-in-out 3; }
-@keyframes petWave {
-  0%,100% { transform: rotate(-26deg); }
-  20% { transform: rotate(-74deg); }
-  45% { transform: rotate(-12deg); }
-  70% { transform: rotate(-68deg); }
-}
-.pet-leg {
-  position: absolute; top: 8rem; width: .7rem; height: 2.2rem; border-radius: 999px;
-  background: linear-gradient(180deg,#58c268,#2b8043); z-index: 1;
-}
-.pet-leg.left { left: 3.1rem; }
-.pet-leg.right { right: 3.1rem; }
-.pet-shoe {
-  position: absolute; left: 50%; bottom: -.3rem; width: 1.7rem; height: .9rem;
-  margin-left: -.85rem; border-radius: .85rem .85rem .45rem .45rem;
-  background: linear-gradient(180deg,#5a6b76,#2b3840);
-  box-shadow: inset 0 .1rem .1rem rgba(255,255,255,.3), 0 .2rem .45rem rgba(20,50,35,.35);
-}
-
+/* 眨眼：整张形象轻微压缩 */
+.pet-img.blink { animation: petImgBlink .15s ease; }
+@keyframes petImgBlink { 50% { transform: scale(1,.93); } }
 .pet-info {
   flex: 1; min-width: 0;
   display: flex; flex-direction: column; gap: .35rem;

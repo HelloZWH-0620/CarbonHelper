@@ -1,6 +1,7 @@
 package com.carbonhelper.tankan
 
 import android.annotation.SuppressLint
+import android.content.Context
 import android.content.res.Configuration
 import android.graphics.Color
 import android.os.Build
@@ -15,6 +16,8 @@ import android.webkit.WebViewClient
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.BackHandler
 import androidx.activity.compose.setContent
+import androidx.appcompat.app.AppCompatDelegate
+import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.border
 import androidx.compose.foundation.interaction.MutableInteractionSource
@@ -29,18 +32,20 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.navigationBarsPadding
 import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.layout.statusBarsPadding
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material3.AlertDialog
+import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.OutlinedTextField
 import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextButton
+import androidx.compose.material3.lightColorScheme
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.DisposableEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableIntStateOf
 import androidx.compose.runtime.mutableStateOf
@@ -48,6 +53,7 @@ import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color as ComposeColor
+import androidx.compose.ui.platform.LocalView
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.unit.dp
@@ -70,10 +76,16 @@ class MainActivity : ComponentActivity() {
 
     private var webView: WebView? = null
 
-    /** 安全区（CSS px）：--sat 顶部状态栏 / --sab 底部手势条 / --kb 键盘高度 */
+    /** 安全区（CSS px）：--sat 顶部挖孔 / --sab 底部手势条 / --kb 键盘高度 */
     private var satPx = 0
     private var sabPx = 0
     private var kbPx = 0
+
+    /**
+     * 状态栏隐藏后，顶部仍需避让挖孔/刘海。该值同时用于 CSS 的 --sat 与
+     * Compose 顶部按钮的 padding，保证原生控件与页面标题对齐。
+     */
+    private val topInsetDp = mutableIntStateOf(0)
 
     /** 「电器详情」对话框读写的电器参数（仅电压 / 电流） */
     private data class ApplianceParam(
@@ -83,27 +95,93 @@ class MainActivity : ComponentActivity() {
         val currentA: Int
     )
 
+    /**
+     * 锁定浅色模式（Android 12 / API 31）：
+     * 在 attachBaseContext 阶段克隆 Configuration，强制 UI_MODE_NIGHT_NO，
+     * 生成独立 Context。这样系统夜间模式（真机实测开启）既不会让 resources、
+     * WebView、isSystemInDarkTheme() 变暗，也不会因为 uiMode 变化重建 Activity
+     * （Manifest 的 configChanges 已包含 uiMode）。
+     */
+    override fun attachBaseContext(newBase: Context) {
+        val cfg = Configuration(newBase.resources.configuration)
+        cfg.uiMode = (cfg.uiMode and Configuration.UI_MODE_NIGHT_MASK.inv()) or
+                Configuration.UI_MODE_NIGHT_NO
+        super.attachBaseContext(newBase.createConfigurationContext(cfg))
+    }
+
     override fun onCreate(savedInstanceState: Bundle?) {
+        // AppCompat 全局夜间策略同样锁死为浅色（应用内所有 AppCompat 组件一致）
+        AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_NO)
         super.onCreate(savedInstanceState)
 
         val window = window
-        if (Build.VERSION.SDK_INT >= 30) {
-            window.setDecorFitsSystemWindows(false)
-        }
+        // Android 12 边到边：不再让系统给 DecorView 套系统栏 inset，全交给 Insets API
+        WindowCompat.setDecorFitsSystemWindows(window, false)
         window.setStatusBarColor(Color.TRANSPARENT)
         window.setNavigationBarColor(Color.TRANSPARENT)
 
         setContent {
-            MainScreen(
-                onReleaseWebView = { webView = it },
-                closeDetail = { closeDetail() },
-                onJsCall = { js -> webView?.post { webView?.evaluateJavascript(js, null) } }
-            )
+            // 显式锁定 Material 3 浅色配色，不读取 isSystemInDarkTheme()
+            MaterialTheme(colorScheme = lightColorScheme()) {
+                MainScreen(
+                    onReleaseWebView = { webView = it },
+                    closeDetail = { closeDetail() },
+                    onJsCall = { js -> webView?.post { webView?.evaluateJavascript(js, null) } }
+                )
+            }
         }
 
         applySystemBarAppearance(window)
+        // DecorView 尚未 attach 时 hide() 会被忽略，post 到下一帧补一次
+        window.decorView.post { hideStatusBar() }
     }
 
+    /**
+     * 应用进入后自动隐藏状态栏 —— Android 12 官方做法：
+     * WindowInsetsController.hide(statusBars)（替代已废弃的 FLAG_FULLSCREEN），
+     * 配合 API 31 新增的 BEHAVIOR_SHOW_TRANSIENT_BARS_BY_SWIPE：用户从顶部下滑
+     * 只瞬时显示系统栏，松手后自动重新隐藏。
+     */
+    private fun hideStatusBar() {
+        val controller = window.insetsController ?: return
+        controller.systemBarsBehavior =
+            WindowInsetsController.BEHAVIOR_SHOW_TRANSIENT_BARS_BY_SWIPE
+        controller.hide(WindowInsets.Type.statusBars())
+    }
+
+    override fun onAttachedToWindow() {
+        super.onAttachedToWindow()
+        hideStatusBar()
+    }
+
+    override fun onResume() {
+        super.onResume()
+        hideStatusBar()
+    }
+
+    override fun onWindowFocusChanged(hasFocus: Boolean) {
+        super.onWindowFocusChanged(hasFocus)
+        if (hasFocus) hideStatusBar()
+    }
+
+    /** Compose Dialog 拥有独立 Window，需在该 Window 上再次隐藏状态栏，避免弹出时闪回 */
+    @Composable
+    private fun HideDialogStatusBar() {
+        val view = LocalView.current
+        DisposableEffect(Unit) {
+            view.windowInsetsController?.let { controller ->
+                controller.systemBarsBehavior =
+                    WindowInsetsController.BEHAVIOR_SHOW_TRANSIENT_BARS_BY_SWIPE
+                controller.hide(WindowInsets.Type.statusBars())
+            }
+            onDispose { }
+        }
+    }
+
+    /**
+     * 窗口底色为纯黑，故系统栏图标必须保持浅色（windowLightStatusBar=false）。
+     * 同时关闭 Android 10+ 的强制对比度遮罩，避免黑底上被系统压出一条灰带。
+     */
     private fun applySystemBarAppearance(window: Window) {
         if (Build.VERSION.SDK_INT < 30) return
         try {
@@ -272,7 +350,8 @@ class MainActivity : ComponentActivity() {
 
         BackHandler(enabled = detailOpen.value || rankOpen.value || subOpen.value) { closeDetail() }
 
-        Box(Modifier.fillMaxSize()) {
+        // 纯黑底：WebView 为透明背景，黑色由此层与 windowBackground 双重保证
+        Box(Modifier.fillMaxSize().background(ComposeColor.Black)) {
             AndroidView(
                 factory = { ctx ->
                     WebView(ctx).apply {
@@ -315,7 +394,7 @@ class MainActivity : ComponentActivity() {
                     onClick = { closeDetail() },
                     backdrop = subBackdrop,
                     modifier = Modifier
-                        .statusBarsPadding()
+                        .padding(top = topInsetDp.intValue.dp)
                         .padding(start = 14.dp, top = 14.dp)
                         .align(Alignment.TopStart)
                 ) {
@@ -327,7 +406,7 @@ class MainActivity : ComponentActivity() {
                     onClick = { closeDetail() },
                     backdrop = glassBackdrop,
                     modifier = Modifier
-                        .statusBarsPadding()
+                        .padding(top = topInsetDp.intValue.dp)
                         .padding(start = 14.dp, top = 14.dp)
                         .align(Alignment.TopStart)
                 ) {
@@ -343,7 +422,7 @@ class MainActivity : ComponentActivity() {
                     },
                     backdrop = glassBackdrop,
                     modifier = Modifier
-                        .statusBarsPadding()
+                        .padding(top = topInsetDp.intValue.dp)
                         .padding(end = 14.dp, top = 14.dp)
                         .align(Alignment.TopEnd)
                 ) {
@@ -457,7 +536,10 @@ class MainActivity : ComponentActivity() {
             if (confirmDeleteOpen.value) {
                 AlertDialog(
                     onDismissRequest = { confirmDeleteOpen.value = false },
-                    title = { Text("删除设备", fontWeight = FontWeight.SemiBold) },
+                    title = {
+                        HideDialogStatusBar()
+                        Text("删除设备", fontWeight = FontWeight.SemiBold)
+                    },
                     text = {
                         Text(
                             "确定删除「${detailName.value}」吗？该设备的用电数据将一并移除。",
@@ -500,6 +582,7 @@ class MainActivity : ComponentActivity() {
                 decorFitsSystemWindows = false
             )
         ) {
+            HideDialogStatusBar()
             // 空白区域点击关闭菜单（不显示涟漪）
             val interaction = remember { MutableInteractionSource() }
             Box(
@@ -514,7 +597,7 @@ class MainActivity : ComponentActivity() {
                 Column(
                     modifier = Modifier
                         .align(Alignment.TopEnd)
-                        .statusBarsPadding()
+                        .padding(top = topInsetDp.intValue.dp)
                         .padding(top = 68.dp, end = 14.dp),
                     verticalArrangement = Arrangement.spacedBy(10.dp),
                     horizontalAlignment = Alignment.End
@@ -551,7 +634,11 @@ class MainActivity : ComponentActivity() {
         onDismiss: () -> Unit,
         onSave: () -> Unit
     ) {
-        Dialog(onDismissRequest = onDismiss) {
+        Dialog(
+            onDismissRequest = onDismiss,
+            properties = DialogProperties(decorFitsSystemWindows = false)
+        ) {
+            HideDialogStatusBar()
             val btnBackdrop = rememberCanvasBackdrop {
                 drawRect(ComposeColor.White.copy(alpha = 0.42f))
             }
@@ -658,6 +745,7 @@ class MainActivity : ComponentActivity() {
     }
 
     @SuppressLint("SetJavaScriptEnabled")
+    @Suppress("DEPRECATION")
     private fun configureWebView() {
         val wv = webView ?: return
         val s = wv.settings
@@ -670,6 +758,14 @@ class MainActivity : ComponentActivity() {
         s.useWideViewPort = true
         s.cacheMode = WebSettings.LOAD_NO_CACHE
         s.mediaPlaybackRequiresUserGesture = false
+        // 锁定浅色：关闭 Android 10+ WebView 强制深色与 Android 13+ 算法深色，
+        // 否则系统夜间模式会把浅色卡片整体反色（与 Activity / Compose 的浅色锁定保持一致）
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.Q) {
+            s.setForceDark(WebSettings.FORCE_DARK_OFF)
+        }
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
+            s.setAlgorithmicDarkeningAllowed(false)
+        }
         wv.setWebViewClient(object : WebViewClient() {
             override fun onPageFinished(view: WebView?, url: String?) {
                 // 文档就绪后再注入一次安全区（首次注入可能早于文档创建而失效）
@@ -686,23 +782,26 @@ class MainActivity : ComponentActivity() {
         wv.overScrollMode = WebView.OVER_SCROLL_NEVER
     }
 
+    /**
+     * 状态栏隐藏后，不能再把「状态栏高度」当作 --sat，否则页面顶部会留出一条
+     * 多余的空白。Android 12 规范里沉浸式内容仍需避让挖孔/刘海，因此取
+     * statusBars 与 displayCutout 顶部 inset 的较大值；隐藏状态下前者为 0。
+     * 该值同步给 Compose 的顶部返回/更多按钮，保证原生与 Web 控件对齐。
+     */
     private fun setupInsets() {
         val wv = webView ?: return
         val density = resources.displayMetrics.density
-        // 兜底：识别不到状态栏 inset 时用系统 status_bar_height 资源值
-        val barId = resources.getIdentifier("status_bar_height", "dimen", "android")
-        val fallbackTop = if (barId > 0) {
-            Math.round(resources.getDimensionPixelSize(barId) / density)
-        } else {
-            Math.round(24f * density / density)
-        }
-        satPx = fallbackTop
+        satPx = 0
+        topInsetDp.intValue = 0
         wv.setOnApplyWindowInsetsListener { _, insets ->
-            val top = Math.round(insets.getInsets(WindowInsets.Type.statusBars()).top / density)
+            val statusTop = insets.getInsets(WindowInsets.Type.statusBars()).top
+            val cutoutTop = insets.getInsets(WindowInsets.Type.displayCutout()).top
+            val top = Math.round(maxOf(statusTop, cutoutTop) / density)
             val bottom = Math.round(insets.getInsets(WindowInsets.Type.navigationBars()).bottom / density)
             val caption = Math.round(insets.getInsets(WindowInsets.Type.captionBar()).top / density)
             val ime = Math.round(insets.getInsets(WindowInsets.Type.ime()).bottom / density)
-            if (top > 0) { satPx = top }
+            satPx = top
+            topInsetDp.intValue = top
             sabPx = maxOf(bottom, caption)
             kbPx = ime
             pushInsetVars()
@@ -732,6 +831,8 @@ class MainActivity : ComponentActivity() {
     /* 系统字体大小改变时（configChanges 已含 fontScale）重新注入 --fs */
     override fun onConfigurationChanged(newConfig: Configuration) {
         super.onConfigurationChanged(newConfig)
+        // 切换深色模式 / 旋转 / 折叠屏等配置变化后，系统栏可能重新出现
+        hideStatusBar()
         pushInsetVars()
     }
 
