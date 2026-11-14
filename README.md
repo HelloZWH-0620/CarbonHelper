@@ -51,6 +51,28 @@ CarbonHelper/
 └── dist/                            # 本地编译产物（APK 不入库，由 Release 分发）
 ```
 
+##  项目结构
+
+```
+CarbonHelper/
+├── Tankan/
+│   ├── app/src/main/
+│   │   ├── assets/
+│   │   ├── java/com/carbonhelper/
+│   │   └── res/
+│   └── keystore/
+├── Resource/
+│   ├── pictures/Electrical things/  
+│   └── pictures/Carbonhelper.png          
+├── AndroidLiquidGlass-2.0.1/
+├── docs.md
+├── README.md / LICENSE / .gitignore
+├── cuter/
+├── campus/
+├── show/
+└── dist/
+```
+
 ##  构建
 
 ```powershell
