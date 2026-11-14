@@ -76,6 +76,10 @@ cd Tankan
 
 本项目基于 **MIT License** 开源，详见 `LICENSE` 文件。
 
-项目部分 UI 设计参考了开源项目 [AndroidLiquidGlass](https://github.com/Kyant0/AndroidLiquidGlass)（Apache License 2.0），特此致谢。
-项目部分素材来自OPPO、小米，仅供个人学习使用，不构成商业用途，特此感谢。
-此项目由AI辅助完成，可能存在缺陷，感谢您的理解。
+#项目部分 UI 设计参考了开源项目 [AndroidLiquidGlass](https://github.com/Kyant0/AndroidLiquidGlass)（Apache License 2.0），特此致谢。
+
+#项目部分素材来自OPPO、小米，仅供个人学习使用，不构成商业用途，特此感谢。
+
+#非常感谢https://github.com/Kyant0/AndroidLiquidGlass为本项目做出的巨大贡献，非常好的液态玻璃效果说是。
+
+#此项目由AI辅助完成，可能存在缺陷，感谢您的理解。
